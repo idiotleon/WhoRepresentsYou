@@ -1,10 +1,13 @@
 package com.leontheprofessional.test.whorepresentsyou.adapter;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
+import com.leontheprofessional.test.whorepresentsyou.R;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
 
 import java.util.ArrayList;
@@ -39,6 +42,15 @@ public class CustomAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
 
-        return null;
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View rootView = inflater.inflate(R.layout.listview_item, null);
+
+        TextView textViewName = (TextView) rootView.findViewById(R.id.textview_name);
+        TextView textViewState = (TextView) rootView.findViewById(R.id.textview_state);
+
+        textViewName.setText(getItem(position).getName());
+        textViewState.setText(getItem(position).getState());
+
+        return rootView;
     }
 }

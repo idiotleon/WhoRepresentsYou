@@ -2,4 +2,7 @@
     <string name="app_name">WhoRepresentsYou</string>
     <string name="action_search">Search</string>
     <string name="search_hint">Please type in zipcode</string>
+    <string name="empty_textview">Nothing to display</string>
+    <string name="parcelable_identifier">parcelable_identifier</string>
+    <string name="bundle_identifier">bunlde_identifier</string>
 </resources>
