@@ -3,13 +3,18 @@ package com.leontheprofessional.test.whorepresentsyou;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.support.v7.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
@@ -18,10 +23,15 @@ public class MemberDetailsActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MemberDetailsActivity.class.getSimpleName();
 
+    private ShareActionProvider shareActionProvider;
+
+    private MemberModel member;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_activity);
+        member = new MemberModel();
     }
 
     @Override
@@ -34,6 +44,23 @@ public class MemberDetailsActivity extends AppCompatActivity {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
             searchView.setIconifiedByDefault(false);
         }
+
+        MenuItem shareMenuItem = menu.findItem(R.id.action_share_detail_activity);
+        shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareMenuItem);
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        String contactInfo = "Name: " + member.getName() + "\n" +
+                "State: " + member.getState() + " District: " + member.getDistrict() + "\n" +
+                "Phone: " + member.getPhoneNumber() + "\n" +
+                "Office Address: " + "\n" + member.getOfficeAddress() + "\n" +
+                "Website: " + member.getLinkUrl();
+
+        shareIntent.putExtra(Intent.EXTRA_TEXT, contactInfo);
+
+        shareActionProvider.setShareIntent(shareIntent);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -53,7 +80,7 @@ public class MemberDetailsActivity extends AppCompatActivity {
     private void handleIntent(Intent intent) {
 
         if (MainActivity.CUSTOM_SEARCH_INTENT_FILTER.equals(intent.getAction())) {
-            MemberModel member = getIntent()
+            member = getIntent()
                     .getBundleExtra(getString(R.string.bundle_identifier))
                     .getParcelable(getString(R.string.parcelable_identifier));
 
@@ -65,14 +92,36 @@ public class MemberDetailsActivity extends AppCompatActivity {
             TextView textViewOffice = (TextView) findViewById(R.id.textview_detail_activity_office);
             TextView textViewLink = (TextView) findViewById(R.id.textview_detail_activity_link);
 
+            CheckBox favoriteCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
+
             textViewName.setText(member.getName());
             textViewParty.setText(member.getParty());
             textViewState.setText(member.getState());
             textViewDistrict.setText(member.getDistrict());
-            textViewPhone.setText(member.getPhoneNumber());
+            final String phoneNumber = member.getPhoneNumber();
+            textViewPhone.setText(phoneNumber);
+            textViewPhone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri uri = Uri.parse(phoneNumber);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }
+            });
             textViewOffice.setText(member.getOfficeAddress());
-            textViewLink.setText(member.getLinkUrl());
-        } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            final String linkUrl = member.getLinkUrl();
+            textViewLink.setText(linkUrl);
+            textViewLink.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Uri uri = Uri.parse(linkUrl);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }
+            });
+        } else if (Intent.ACTION_SEARCH.equals(intent.getAction()))
+
+        {
             String zipcode = intent.getStringExtra(SearchManager.QUERY);
             Log.v(LOG_TAG, "zipcode: " + zipcode);
             Intent mainActivityIntent = new Intent(MemberDetailsActivity.this, MainActivity.class);

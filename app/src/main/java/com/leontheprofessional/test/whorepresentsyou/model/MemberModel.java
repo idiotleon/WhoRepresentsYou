@@ -16,6 +16,8 @@ public class MemberModel implements Parcelable {
     private String officeAddress;
     private String linkUrl;
 
+    public MemberModel(){}
+
     public MemberModel(String name, String party, String state, String district, String phoneNumber, String officeAddress, String linkUrl) {
         this.name = name;
         this.party = party;
