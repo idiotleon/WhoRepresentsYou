@@ -17,6 +17,7 @@ public class MemberContract {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
 
+        public static final String COLUMN_MEMBER_ID = "_id";
         public static final String COLUMN_MEMBER_NAME = "member_name";
         public static final String COLUMN_MEMBER_STATE = "member_state";
         public static final String COLUMN_MEMBER_DISTRICT = "member_district";
