@@ -36,6 +36,10 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
+
+        <provider
+            android:name="com.leontheprofessional.test.whorepresentsyou.provider.MemberContentProvider"
+            android:authorities="com.leontheprofessional.test.whorepresentsyou.Provider" />
     </application>
 
 </manifest>
