@@ -1,7 +1,9 @@
 package com.leontheprofessional.test.whorepresentsyou.jsonparsing;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
 
 import org.json.JSONArray;
@@ -27,7 +29,7 @@ public class WhoRepresentsYouApi {
     private final String ZIP_OPTION = "zip=";
     private final String JSON_OPTION = "&output=json";
 
-    public ArrayList<MemberModel> getAllMemberByZipCode(String zipCode) throws JSONException, MalformedURLException {
+    public ArrayList<MemberModel> getAllMemberByZipCode(Context context, String zipCode) throws JSONException, MalformedURLException {
         if (zipCode != null && zipCode.length() > 0) {
 
             String urlString = BASE_URL + ZIP_OPTION + zipCode + JSON_OPTION;
@@ -36,7 +38,7 @@ public class WhoRepresentsYouApi {
 
             String jsonString = getJsonDataAsStringFromUrl(url);
             Log.v(LOG_TAG, "jsonString: " + jsonString);
-            return processJsonString(jsonString);
+            return processJsonString(context, jsonString);
         } else {
             return null;
         }
@@ -91,7 +93,7 @@ public class WhoRepresentsYouApi {
         return jsonDataAsString;
     }
 
-    private ArrayList<MemberModel> processJsonString(String jsonString) throws JSONException {
+    private ArrayList<MemberModel> processJsonString(Context context, String jsonString) throws JSONException {
 
         final String WRY_RESULTS = "results";
         final String WRY_NAME = "name";
@@ -128,6 +130,7 @@ public class WhoRepresentsYouApi {
             link = itemJson.getString(WRY_LINK);
 
             MemberModel member = new MemberModel(name, party, state, districtNumber, phoneNumber, officeAddress, link);
+            GeneralHelper.saveMembers(context, member);
             members.add(member);
         }
         return members;

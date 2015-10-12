@@ -32,7 +32,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 MemberContract.MemberEntry.COLUMN_MEMBER_DISTRICT + " INTEGER NOT NULL, " +
                 MemberContract.MemberEntry.COLUMN_MEMBER_PHONE + " TEXT NOT NULL, " +
                 MemberContract.MemberEntry.COLUMN_MEMBER_OFFICE + " TEXT NOT NULL, " +
-                MemberContract.MemberEntry.COLUMN_MEMBER_WEBSITE + " TEXT NOT NULL)";
+                MemberContract.MemberEntry.COLUMN_MEMBER_WEBSITE + " TEXT NOT NULL, " +
+                MemberContract.MemberEntry.COLUMN_MEMBER_FAVORITE_STATUS_CODE + " DEFAULT 0)";
         Log.v(LOG_TAG, "createMemberTableQuery: " + createMemberTableQuery);
 
         db.execSQL(createMemberTableQuery);

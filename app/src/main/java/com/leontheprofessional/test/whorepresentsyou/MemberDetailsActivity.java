@@ -15,9 +15,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.support.v7.widget.ShareActionProvider;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.leontheprofessional.test.whorepresentsyou.helper.GeneralConstant;
+import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
+
+import java.lang.reflect.Member;
 
 public class MemberDetailsActivity extends AppCompatActivity {
 
@@ -93,6 +99,25 @@ public class MemberDetailsActivity extends AppCompatActivity {
             TextView textViewLink = (TextView) findViewById(R.id.textview_detail_activity_link);
 
             CheckBox favoriteCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
+
+            if (GeneralConstant.FAVORITE_STATUS_TRUE_STATUS_CODE == GeneralHelper.getFavoriteStatus(MemberDetailsActivity.this, member.getName(), 0)) {
+                favoriteCheckBox.setChecked(true);
+            } else {
+                favoriteCheckBox.setChecked(false);
+            }
+
+            favoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        GeneralHelper.markAsFavorite(MemberDetailsActivity.this, member);
+                        Toast.makeText(MemberDetailsActivity.this, "Marked as Favorite.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        GeneralHelper.cancelFavoriteStatus(MemberDetailsActivity.this, member);
+                        Toast.makeText(MemberDetailsActivity.this, "Favorite canceled", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
             textViewName.setText(member.getName());
             textViewParty.setText(member.getParty());
