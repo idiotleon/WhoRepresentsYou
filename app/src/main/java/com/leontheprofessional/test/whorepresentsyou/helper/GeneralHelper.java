@@ -1,5 +1,6 @@
 package com.leontheprofessional.test.whorepresentsyou.helper;
 
+import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -74,5 +75,16 @@ public class GeneralHelper {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
         return sharedPreferences.getInt(key, defaultValue);
+    }
+
+    public static void saveMembers(Context context, MemberModel member) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MemberContract.MemberEntry.COLUMN_MEMBER_NAME, member.getName());
+        contentValues.put(MemberContract.MemberEntry.COLUMN_MEMBER_STATE, member.getState());
+        contentValues.put(MemberContract.MemberEntry.COLUMN_MEMBER_DISTRICT, member.getDistrict());
+        contentValues.put(MemberContract.MemberEntry.COLUMN_MEMBER_PHONE, member.getPhoneNumber());
+        contentValues.put(MemberContract.MemberEntry.COLUMN_MEMBER_OFFICE, member.getOfficeAddress());
+        contentValues.put(MemberContract.MemberEntry.COLUMN_MEMBER_WEBSITE, member.getLinkUrl());
+        context.getContentResolver().insert(MemberContract.MemberEntry.CONTENT_URI, contentValues);
     }
 }
