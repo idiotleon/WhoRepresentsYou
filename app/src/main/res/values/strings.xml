@@ -4,5 +4,6 @@
     <string name="search_hint">Please type in zipcode</string>
     <string name="empty_textview">Nothing to display</string>
     <string name="parcelable_identifier">parcelable_identifier</string>
-    <string name="bundle_identifier">bunlde_identifier</string>
+    <string name="bundle_identifier">bundle_identifier</string>
+    <string name="search_keyword_identifier">search_keyword_identifier</string>
 </resources>

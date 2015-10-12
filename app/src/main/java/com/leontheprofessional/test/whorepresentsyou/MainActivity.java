@@ -6,11 +6,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -21,26 +18,28 @@ import android.widget.TextView;
 
 import com.leontheprofessional.test.whorepresentsyou.adapter.CustomAdapter;
 import com.leontheprofessional.test.whorepresentsyou.jsonparsing.WhoRepresentsYouApi;
-import com.leontheprofessional.test.whorepresentsyou.model.DetailActivity;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
 
 import org.json.JSONException;
 
-import java.lang.reflect.Member;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+
+import static com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper.isZipCode;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    public static final String CUSTOM_INTENT_FILTER = "com.leontheprofessional.test.CustomIntentFilter";
+    public static final String CUSTOM_SEARCH_INTENT_FILTER = "com.leontheprofessional.test.CustomSearchIntentFilter";
 
     private ListView listView;
 
     private CustomAdapter customAdapter;
 
     private ArrayList<MemberModel> members;
+
+    private String zipcode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +96,13 @@ public class MainActivity extends AppCompatActivity {
         Log.v(LOG_TAG, "handleIntent() executed");
 
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            final String zipcode = intent.getStringExtra(SearchManager.QUERY);
+            zipcode = intent.getStringExtra(SearchManager.QUERY);
+        } else if (CUSTOM_SEARCH_INTENT_FILTER.equals(intent.getAction())) {
+            zipcode = intent.getStringExtra(getString(R.string.search_keyword_identifier));
+            Log.v(LOG_TAG, "zipcode: " + zipcode);
+        }
+
+        if (isZipCode(zipcode)) {
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... params) {
@@ -110,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
+
 
                     return null;
                 }
@@ -129,15 +135,18 @@ public class MainActivity extends AppCompatActivity {
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                            Intent intent = new Intent(MainActivity.this, MemberDetailsActivity.class);
                             Bundle bundle = new Bundle();
                             bundle.putParcelable(getString(R.string.parcelable_identifier), members.get(position));
                             intent.putExtra(getString(R.string.bundle_identifier), bundle);
+                            intent.setAction(CUSTOM_SEARCH_INTENT_FILTER);
                             startActivity(intent);
                         }
                     });
                 }
             }.execute();
+        } else {
+            Log.e(LOG_TAG, "Zipcode is incorrect.");
         }
     }
 }
