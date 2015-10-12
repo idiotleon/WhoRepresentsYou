@@ -5,6 +5,8 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -86,5 +88,13 @@ public class GeneralHelper {
         contentValues.put(MemberContract.MemberEntry.COLUMN_MEMBER_OFFICE, member.getOfficeAddress());
         contentValues.put(MemberContract.MemberEntry.COLUMN_MEMBER_WEBSITE, member.getLinkUrl());
         context.getContentResolver().insert(MemberContract.MemberEntry.CONTENT_URI, contentValues);
+    }
+
+    public static boolean isNetworkConnectionAvailable(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        if (info == null) return false;
+        NetworkInfo.State network = info.getState();
+        return (network == NetworkInfo.State.CONNECTED || network == NetworkInfo.State.CONNECTING);
     }
 }

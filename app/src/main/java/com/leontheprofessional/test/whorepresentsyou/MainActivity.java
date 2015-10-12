@@ -15,8 +15,10 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.leontheprofessional.test.whorepresentsyou.adapter.CustomAdapter;
+import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
 import com.leontheprofessional.test.whorepresentsyou.jsonparsing.WhoRepresentsYouApi;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
 
@@ -102,51 +104,55 @@ public class MainActivity extends AppCompatActivity {
             Log.v(LOG_TAG, "zipcode: " + zipcode);
         }
 
-        if (isZipCode(zipcode)) {
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... params) {
+        if (GeneralHelper.isNetworkConnectionAvailable(MainActivity.this)) {
+            if (isZipCode(zipcode)) {
+                new AsyncTask<Void, Void, Void>() {
+                    @Override
+                    protected Void doInBackground(Void... params) {
 
-                    WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
-                    try {
-                        members = whoRepresentsYouApi.getAllMemberByZipCode(zipcode);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
+                        WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
+                        try {
+                            members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipcode);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        return null;
                     }
 
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
 
-                    return null;
-                }
+                        customAdapter = new CustomAdapter(MainActivity.this, members);
 
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    super.onPostExecute(aVoid);
+                        listView.setAdapter(customAdapter);
 
-                    customAdapter = new CustomAdapter(MainActivity.this, members);
+                        TextView emptyTextView = new TextView(MainActivity.this);
+                        emptyTextView.setText(getString(R.string.empty_textview));
+                        listView.setEmptyView(emptyTextView);
 
-                    listView.setAdapter(customAdapter);
-
-                    TextView emptyTextView = new TextView(MainActivity.this);
-                    emptyTextView.setText(getString(R.string.empty_textview));
-                    listView.setEmptyView(emptyTextView);
-
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Intent intent = new Intent(MainActivity.this, MemberDetailsActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putParcelable(getString(R.string.parcelable_identifier), members.get(position));
-                            intent.putExtra(getString(R.string.bundle_identifier), bundle);
-                            intent.setAction(CUSTOM_SEARCH_INTENT_FILTER);
-                            startActivity(intent);
-                        }
-                    });
-                }
-            }.execute();
-        } else {
-            Log.e(LOG_TAG, "Zipcode is incorrect.");
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Intent intent = new Intent(MainActivity.this, MemberDetailsActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelable(getString(R.string.parcelable_identifier), members.get(position));
+                                intent.putExtra(getString(R.string.bundle_identifier), bundle);
+                                intent.setAction(CUSTOM_SEARCH_INTENT_FILTER);
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                }.execute();
+            } else {
+                Log.e(LOG_TAG, "Zipcode is incorrect.");
+            }
+        }else{
+            Toast.makeText(MainActivity.this, getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
         }
     }
 }
