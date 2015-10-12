@@ -55,5 +55,10 @@
         android:gravity="center"
         android:textSize="@dimen/text_size_list_item" />
 
+    <CheckBox
+        android:id="@+id/checkbox_favorite_star_button"
+        style="?android:attr/starStyle"
+        android:layout_width="@dimen/favorite_start_width"
+        android:layout_height="@dimen/favorite_start_height" />
 
 </LinearLayout>

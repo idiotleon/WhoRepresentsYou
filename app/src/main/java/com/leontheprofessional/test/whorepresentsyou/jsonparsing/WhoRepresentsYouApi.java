@@ -18,13 +18,10 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 
-/**
- * Created by Leon on 10/12/2015.
- */
+
 public class WhoRepresentsYouApi {
 
     private static final String LOG_TAG = WhoRepresentsYouApi.class.getSimpleName();
-
 
     private final String BASE_URL = "http://whoismyrepresentative.com/getall_mems.php?";
     private final String ZIP_OPTION = "zip=";
