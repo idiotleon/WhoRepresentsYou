@@ -5,55 +5,55 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textview_detail_activity_name"
+        android:id="@+id/textview_detail_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="@dimen/text_size_list_item" />
+        android:textSize="@dimen/text_size_listview_item" />
 
     <TextView
-        android:id="@+id/textview_detail_activity_party"
+        android:id="@+id/textview_detail_party"
         android:layout_width="match_parent"
 
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="@dimen/text_size_list_item" />
+        android:textSize="@dimen/text_size_listview_item" />
 
     <TextView
-        android:id="@+id/textview_detail_activity_state"
+        android:id="@+id/textview_detail_state"
         android:layout_width="match_parent"
 
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="@dimen/text_size_list_item" />
-
-    <TextView
-        android:id="@+id/textview_detail_activity_district"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="@dimen/text_size_list_item" />
+        android:textSize="@dimen/text_size_listview_item" />
 
     <TextView
-        android:id="@+id/textview_detail_activity_phone"
+        android:id="@+id/textview_detail_district"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="@dimen/text_size_list_item" />
+        android:textSize="@dimen/text_size_listview_item" />
 
     <TextView
-        android:id="@+id/textview_detail_activity_office"
+        android:id="@+id/textview_detail_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="@dimen/text_size_list_item" />
+        android:textSize="@dimen/text_size_listview_item" />
 
     <TextView
-        android:id="@+id/textview_detail_activity_link"
+        android:id="@+id/textview_detail_office"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="@dimen/text_size_list_item" />
+        android:gravity="left"
+        android:textSize="@dimen/text_size_listview_item" />
+
+    <TextView
+        android:id="@+id/textview_detail_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:textSize="@dimen/text_size_listview_item" />
 
     <CheckBox
         android:id="@+id/checkbox_favorite_star_button"

@@ -5,9 +5,11 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -21,6 +23,13 @@ import com.leontheprofessional.test.whorepresentsyou.provider.MemberContract;
 public class GeneralHelper {
 
     private static final String LOG_TAG = GeneralHelper.class.getSimpleName();
+
+    public static boolean isTablet(Context context) {
+        int screenLayout = context.getResources().getConfiguration().screenLayout;
+        return (Build.VERSION.SDK_INT >= 11 &&
+                (((screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE) ||
+                        ((screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_XLARGE)));
+    }
 
     public static boolean isZipCode(String zipcode) {
         if (zipcode != null && zipcode.length() == 5) {
