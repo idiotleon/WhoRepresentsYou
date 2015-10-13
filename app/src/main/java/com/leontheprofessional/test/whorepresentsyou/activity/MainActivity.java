@@ -13,17 +13,20 @@ import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.leontheprofessional.test.whorepresentsyou.R;
 import com.leontheprofessional.test.whorepresentsyou.activity.fragment.DisplayFragment;
-import com.leontheprofessional.test.whorepresentsyou.adapter.CustomAdapter;
+import com.leontheprofessional.test.whorepresentsyou.activity.fragment.DisplayListFragment;
+import com.leontheprofessional.test.whorepresentsyou.activity.fragment.adapter.CustomListFragmentAdapter;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
 import com.leontheprofessional.test.whorepresentsyou.jsonparsing.WhoRepresentsYouApi;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
@@ -33,6 +36,7 @@ import org.json.JSONException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
+import static com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper.cancelFavoriteStatus;
 import static com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper.isZipCode;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,11 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String CUSTOM_SEARCH_INTENT_FILTER = "com.leontheprofessional.test.CustomSearchIntentFilter";
 
-    private ListView listView;
-
-    private CustomAdapter customAdapter;
-
     private ArrayList<MemberModel> members;
+
 
     private String zipcode;
 
@@ -56,11 +57,126 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState != null && savedInstanceState.containsKey(getString(R.string.save_instance_state_main_activity))) {
             members = savedInstanceState.getParcelableArrayList(getString(R.string.save_instance_state_main_activity));
+            refreshListFragment(members);
         } else if (GeneralHelper.isNetworkConnectionAvailable(MainActivity.this)) {
             refreshPage(getIntent());
+            refreshListFragment(members);
         } else {
             showFavorite();
         }
+
+        if (GeneralHelper.isTablet(MainActivity.this)) {
+            setContentView(R.layout.fragment_main);
+            Log.v(LOG_TAG, "This is a tablet");
+        } else {
+            setContentView(R.layout.activity_main);
+            Log.v(LOG_TAG, "This is a phone");
+            final AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.autocomplete_textview);
+            String[] states = getResources().getStringArray(R.array.state_code);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, states);
+            autoCompleteTextView.setAdapter(adapter);
+            autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+/*
+                    Bundle bundle = new Bundle();
+                    bundle.put
+                    DisplayListFragment displayListFragment = new DisplayListFragment();
+*/
+                }
+            });
+
+            refreshListFragment(members);
+
+            Button representativeSearchButton = (Button) findViewById(R.id.btn_search_representative);
+            representativeSearchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final String keyword = autoCompleteTextView.getText().toString();
+                    GeneralHelper.hideSoftKeyBoard(MainActivity.this, v);
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
+                            try {
+                                members.clear();
+                                members = whoRepresentsYouApi.searchRepresentatives(MainActivity.this, keyword);
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            refreshListFragment(members);
+                        }
+                    }.execute();
+                }
+            });
+
+            Button senatorSearchButton = (Button) findViewById(R.id.btn_search_senator);
+            senatorSearchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final String keyword = autoCompleteTextView.getText().toString();
+                    if (keyword == null && keyword.length()==0) {
+
+                    } else {
+                        GeneralHelper.hideSoftKeyBoard(MainActivity.this, v);
+                        new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
+                                try {
+                                    members.clear();
+                                    members = whoRepresentsYouApi.searchSenators(MainActivity.this, keyword);
+                                } catch (MalformedURLException e) {
+                                    e.printStackTrace();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (NullPointerException ex) {
+                                    ex.printStackTrace();
+                                }
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Void aVoid) {
+                                super.onPostExecute(aVoid);
+                                refreshListFragment(members);
+                            }
+                        }.execute();
+                    }
+                }
+            });
+        }
+    }
+
+
+    private void refreshListFragment(ArrayList<MemberModel> members) {
+        DisplayListFragment displayListFragment = new DisplayListFragment();
+        CustomListFragmentAdapter customListFragmentAdapter = new CustomListFragmentAdapter(MainActivity.this, members);
+//        if (members != null && members.size() > 0) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(getString(R.string.fragment_argument_identifier3), members);
+
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container_main_activity, displayListFragment);
+        displayListFragment.setArguments(bundle);
+        displayListFragment.setListAdapter(customListFragmentAdapter);
+        fragmentTransaction.commit();
+/*        } else {
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            displayListFragment.setListAdapter(customListFragmentAdapter);
+            fragmentTransaction.remove(displayListFragment);
+            fragmentTransaction.commit();
+        }*/
     }
 
     @Override
@@ -68,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState, outPersistentState);
         outState.putParcelableArrayList(getString(R.string.save_instance_state_main_activity), members);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,9 +213,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void refreshPage(Intent intent) {
-
         Log.v(LOG_TAG, "handleIntent() executed");
-
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             zipcode = intent.getStringExtra(SearchManager.QUERY);
         } else if (CUSTOM_SEARCH_INTENT_FILTER.equals(intent.getAction())) {
@@ -113,17 +226,15 @@ public class MainActivity extends AppCompatActivity {
                 new AsyncTask<Void, Void, Void>() {
                     @Override
                     protected Void doInBackground(Void... params) {
-
                         WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
                         try {
+                            members.clear();
                             members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipcode);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
                         }
-
-
                         return null;
                     }
 
@@ -132,8 +243,6 @@ public class MainActivity extends AppCompatActivity {
                         super.onPostExecute(aVoid);
 
                         if (GeneralHelper.isTablet(MainActivity.this)) {
-                            Log.v(LOG_TAG, "This is a tablet");
-                            setContentView(R.layout.fragment_main);
                             Bundle arguments = new Bundle();
                             arguments.putParcelableArrayList(getString(R.string.fragment_argument_identifier), members);
                             DisplayFragment displayFragment = new DisplayFragment();
@@ -145,26 +254,7 @@ public class MainActivity extends AppCompatActivity {
 
                             fragmentTransaction.commit();
                         } else {
-                            setContentView(R.layout.activity_main);
-                            listView = (ListView) findViewById(R.id.listview_main_activity);
-
-                            customAdapter = new CustomAdapter(MainActivity.this, members);
-                            listView.setAdapter(customAdapter);
-                            TextView emptyTextView = new TextView(MainActivity.this);
-                            emptyTextView.setText(getString(R.string.empty_textview));
-                            listView.setEmptyView(emptyTextView);
-
-                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    Intent intent = new Intent(MainActivity.this, MemberDetailsActivity.class);
-                                    Bundle bundle = new Bundle();
-                                    bundle.putParcelable(getString(R.string.parcelable_identifier), members.get(position));
-                                    intent.putExtra(getString(R.string.bundle_identifier), bundle);
-                                    intent.setAction(CUSTOM_SEARCH_INTENT_FILTER);
-                                    startActivity(intent);
-                                }
-                            });
+                            refreshListFragment(members);
                         }
                     }
                 }.execute();

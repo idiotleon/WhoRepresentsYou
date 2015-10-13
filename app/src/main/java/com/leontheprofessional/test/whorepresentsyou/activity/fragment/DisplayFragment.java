@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.leontheprofessional.test.whorepresentsyou.R;
@@ -58,7 +57,7 @@ public class DisplayFragment extends Fragment {
             });
 
         TextView emptyTextView = new TextView(getActivity());
-        emptyTextView.setText(getString(R.string.empty_textview));
+        emptyTextView.setText(getString(R.string.empty_textview_text));
         gridView.setEmptyView(emptyTextView);
 
         return rootView;

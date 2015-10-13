@@ -26,8 +26,15 @@ public class WhoRepresentsYouApi {
     private static final String LOG_TAG = WhoRepresentsYouApi.class.getSimpleName();
 
     private final String BASE_URL = "http://whoismyrepresentative.com/getall_mems.php?";
+    private final String BASE_URL_REPRESENTATIVE_BY_NAME = "http://whoismyrepresentative.com/getall_reps_byname.php?";
+    private final String BASE_URL_REPRESENTATIVE_BY_STATE = "http://whoismyrepresentative.com/getall_reps_bystate.php?";
+    private final String BASE_URL_SENATOR_BY_STATE = "http://whoismyrepresentative.com/getall_sens_bystate.php?";
+    private final String BASE_URL_SENATOR_BY_NAME = "http://whoismyrepresentative.com/getall_sens_byname.php?";
     private final String ZIP_OPTION = "zip=";
+    private final String NAME_OPTION = "name=";
+    private final String STATE_OPTION = "state=";
     private final String JSON_OPTION = "&output=json";
+
 
     public ArrayList<MemberModel> getAllMemberByZipCode(Context context, String zipCode) throws JSONException, MalformedURLException {
         if (zipCode != null && zipCode.length() > 0) {
@@ -42,6 +49,64 @@ public class WhoRepresentsYouApi {
         } else {
             return null;
         }
+    }
+
+    public ArrayList<MemberModel> searchRepresentatives(Context context, String keyword) throws MalformedURLException, JSONException {
+        if (keyword.length() == 2 && keyword.matches("[A-Z]+")) {
+            return getRepresentativesByState(context, keyword);
+        } else {
+            return getRepresentativesByName(context, keyword);
+        }
+    }
+
+    public ArrayList<MemberModel> searchSenators(Context context, String keyword) throws MalformedURLException, JSONException {
+        if (keyword.length() == 2 && keyword.matches("[A-Z]+")) {
+            return getSenatorsByState(context, keyword);
+        } else {
+            return getSenatorsByName(context, keyword);
+        }
+    }
+
+
+    private ArrayList<MemberModel> getSenatorsByName(Context context, String keyword) throws MalformedURLException, JSONException {
+        String urlString = BASE_URL_SENATOR_BY_NAME + NAME_OPTION + keyword + JSON_OPTION;
+        Log.v(LOG_TAG, "urlString, getSenatorsByName: " + urlString);
+        URL url = new URL(urlString);
+
+        String jsonString = getJsonDataAsStringFromUrl(url);
+        Log.v(LOG_TAG, "jsonString, getSenatorsByName: " + jsonString);
+        return processJsonString(context, jsonString);
+    }
+
+
+    private ArrayList<MemberModel> getSenatorsByState(Context context, String keyword) throws MalformedURLException, JSONException {
+        String urlString = BASE_URL_SENATOR_BY_STATE + STATE_OPTION + keyword + JSON_OPTION;
+        Log.v(LOG_TAG, "urlString, getSenatorsByState: " + urlString);
+        URL url = new URL(urlString);
+
+        String jsonString = getJsonDataAsStringFromUrl(url);
+        Log.v(LOG_TAG, "jsonString, getSenatorsByState: " + jsonString);
+        return processJsonString(context, jsonString);
+    }
+
+    private ArrayList<MemberModel> getRepresentativesByState(Context context, String keyword) throws MalformedURLException, JSONException {
+        String urlString = BASE_URL_REPRESENTATIVE_BY_STATE + STATE_OPTION + keyword + JSON_OPTION;
+        Log.v(LOG_TAG, "urlString, getRepresentativesByState: " + urlString);
+        URL url = new URL(urlString);
+
+        String jsonString = getJsonDataAsStringFromUrl(url);
+        Log.v(LOG_TAG, "jsonString, getRepresentativesByState: " + jsonString);
+        return processJsonString(context, jsonString);
+    }
+
+    private ArrayList<MemberModel> getRepresentativesByName(Context context, String keyword) throws MalformedURLException, JSONException {
+        String urlString = BASE_URL_REPRESENTATIVE_BY_NAME + NAME_OPTION + keyword + JSON_OPTION;
+        Log.v(LOG_TAG, "urlString, getRepresentativesByName: " + urlString);
+        URL url = new URL(urlString);
+
+        String jsonString = getJsonDataAsStringFromUrl(url);
+        Log.v(LOG_TAG, "jsonString, getRepresentativesByName: " + jsonString);
+        return processJsonString(context, jsonString);
     }
 
     private String getJsonDataAsStringFromUrl(URL url) {
@@ -95,44 +160,52 @@ public class WhoRepresentsYouApi {
 
     private ArrayList<MemberModel> processJsonString(Context context, String jsonString) throws JSONException {
 
-        final String WRY_RESULTS = "results";
-        final String WRY_NAME = "name";
-        final String WRY_PARTY = "party";
-        final String WRY_STATE = "state";
-        final String WRY_DISTRICT = "district";
-        final String WRY_PHONE = "phone";
-        final String WRY_OFFICE = "office";
-        final String WRY_LINK = "link";
+        if (jsonString != null && !jsonString.contains("No Data Found")) {
 
-        String name;
-        String party;
-        String state;
-        String districtNumber;
-        String phoneNumber;
-        String officeAddress;
-        String link;
+            final String WRY_RESULTS = "results";
+            final String WRY_NAME = "name";
+            final String WRY_PARTY = "party";
+            final String WRY_STATE = "state";
+            final String WRY_DISTRICT = "district";
+            final String WRY_PHONE = "phone";
+            final String WRY_OFFICE = "office";
+            final String WRY_LINK = "link";
 
-        JSONObject baseJsonObject = new JSONObject(jsonString);
+            String name;
+            String party;
+            String state;
+            String districtNumber;
+            String phoneNumber;
+            String officeAddress;
+            String link;
 
-        JSONArray jsonArray = baseJsonObject.getJSONArray(WRY_RESULTS);
+            JSONObject baseJsonObject = new JSONObject(jsonString);
 
-        ArrayList<MemberModel> members = new ArrayList<>();
+            JSONArray jsonArray = baseJsonObject.getJSONArray(WRY_RESULTS);
 
-        for (int i = 0; i < jsonArray.length(); i++) {
-            JSONObject itemJson = jsonArray.getJSONObject(i);
+            ArrayList<MemberModel> members = new ArrayList<>();
 
-            name = itemJson.getString(WRY_NAME);
-            party = itemJson.getString(WRY_PARTY);
-            state = itemJson.getString(WRY_STATE);
-            districtNumber = itemJson.getString(WRY_DISTRICT);
-            phoneNumber = itemJson.getString(WRY_PHONE);
-            officeAddress = itemJson.getString(WRY_OFFICE);
-            link = itemJson.getString(WRY_LINK);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject itemJson = jsonArray.getJSONObject(i);
 
-            MemberModel member = new MemberModel(name, party, state, districtNumber, phoneNumber, officeAddress, link);
-            GeneralHelper.saveMembers(context, member);
-            members.add(member);
+                name = itemJson.getString(WRY_NAME);
+                party = itemJson.getString(WRY_PARTY);
+                state = itemJson.getString(WRY_STATE);
+                districtNumber = itemJson.getString(WRY_DISTRICT);
+                phoneNumber = itemJson.getString(WRY_PHONE);
+                officeAddress = itemJson.getString(WRY_OFFICE);
+                link = itemJson.getString(WRY_LINK);
+
+                MemberModel member = new MemberModel(name, party, state, districtNumber, phoneNumber, officeAddress, link);
+                GeneralHelper.saveMembers(context, member);
+                members.add(member);
+            }
+
+            return members;
+
+        } else {
+            Log.v(LOG_TAG, "processJson returns a new ArrayList");
+            return new ArrayList<MemberModel>();
         }
-        return members;
     }
 }
