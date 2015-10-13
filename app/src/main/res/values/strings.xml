@@ -2,19 +2,87 @@
     <string name="app_name">WhoRepresentsYou</string>
     <string name="action_search">Search</string>
     <string name="search_hint">Please type in zipcode</string>
-    <string name="empty_textview">Nothing to display</string>
+    <string name="empty_textview_text">Nothing to display</string>
 
     <string name="title_text_share">Share</string>
     <string name="network_unavailable">Network is not available.</string>
     <string name="call_permission_rejected_by_user">Call permission rejected by the user.</string>
     <string name="imageview_gridview_item">Photo images of the member.</string>
+    <string name="btn_search_representative">Representative</string>
+    <string name="btn_search_senator">Senator</string>
+
+    <string-array name="state_code">
+        <item>AL</item>
+        <item>AK</item>
+        <item>AZ</item>
+        <item>AR</item>
+        <item>CA</item>
+        <item>CO</item>
+        <item>CT</item>
+        <item>DE</item>
+        <item>DC</item>
+        <item>FL</item>
+        <item>GA</item>
+        <item>HI</item>
+        <item>ID</item>
+        <item>IL</item>
+        <item>IN</item>
+        <item>IA</item>
+        <item>KS</item>
+        <item>KY</item>
+        <item>LA</item>
+        <item>ME</item>
+        <item>MD</item>
+        <item>MA</item>
+        <item>MI</item>
+        <item>MN</item>
+        <item>MS</item>
+        <item>MO</item>
+        <item>MT</item>
+        <item>NE</item>
+        <item>NV</item>
+        <item>NH</item>
+        <item>NJ</item>
+        <item>NM</item>
+        <item>NY</item>
+        <item>NC</item>
+        <item>ND</item>
+        <item>OH</item>
+        <item>OK</item>
+        <item>OR</item>
+        <item>PA</item>
+        <item>RI</item>
+        <item>SC</item>
+        <item>SD</item>
+        <item>TN</item>
+        <item>TX</item>
+        <item>UT</item>
+        <item>VT</item>
+        <item>VA</item>
+        <item>WA</item>
+        <item>WV</item>
+        <item>WI</item>
+        <item>WY</item>
+        <item>AS</item>
+        <item>GU</item>
+        <item>MP</item>
+        <item>PR</item>
+        <item>VI</item>
+        <item>UM</item>
+        <item>FM</item>
+        <item>MH</item>
+        <item>PW</item>
+    </string-array>
 
 
     <string name="parcelable_identifier">parcelable_identifier</string>
     <string name="bundle_identifier">bundle_identifier</string>
+    <string name="intent_identifier1">intent_identifier1</string>
     <string name="search_keyword_identifier">search_keyword_identifier</string>
     <string name="fragment_argument_identifier">fragment_argument_identifier</string>
     <string name="fragment_argument_identifier2">fragment_argument_identifier2</string>
+    <string name="fragment_argument_identifier3">fragment_argument_identifier3</string>
+    <string name="fragment_argument_identifier4">fragment_argument_identifier4</string>
     <string name="save_instance_state_main_activity">save_instance_state_main_activity</string>
     <string name="save_instance_state_details_activity">save_instance_state_details_activity</string>
 </resources>

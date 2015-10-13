@@ -1,5 +1,6 @@
 package com.leontheprofessional.test.whorepresentsyou.helper;
 
+import android.app.Activity;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -12,9 +13,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
-import com.leontheprofessional.test.whorepresentsyou.helper.GeneralConstant;
 import com.leontheprofessional.test.whorepresentsyou.provider.MemberContract;
 
 /**
@@ -23,6 +25,11 @@ import com.leontheprofessional.test.whorepresentsyou.provider.MemberContract;
 public class GeneralHelper {
 
     private static final String LOG_TAG = GeneralHelper.class.getSimpleName();
+
+    public static void hideSoftKeyBoard(Context context, View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
 
     public static boolean isTablet(Context context) {
         int screenLayout = context.getResources().getConfiguration().screenLayout;
