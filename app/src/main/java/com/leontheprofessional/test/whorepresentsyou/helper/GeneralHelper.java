@@ -79,15 +79,22 @@ public class GeneralHelper {
         return sharedPreferences.getInt(key, defaultValue);
     }
 
-    public static void saveMembers(Context context, MemberModel member) {
-        ContentValues contentValues = new ContentValues();
+    public static void saveMembers(final Context context, MemberModel member) {
+        final ContentValues contentValues = new ContentValues();
         contentValues.put(MemberContract.MemberEntry.COLUMN_MEMBER_NAME, member.getName());
         contentValues.put(MemberContract.MemberEntry.COLUMN_MEMBER_STATE, member.getState());
         contentValues.put(MemberContract.MemberEntry.COLUMN_MEMBER_DISTRICT, member.getDistrict());
         contentValues.put(MemberContract.MemberEntry.COLUMN_MEMBER_PHONE, member.getPhoneNumber());
         contentValues.put(MemberContract.MemberEntry.COLUMN_MEMBER_OFFICE, member.getOfficeAddress());
         contentValues.put(MemberContract.MemberEntry.COLUMN_MEMBER_WEBSITE, member.getLinkUrl());
-        context.getContentResolver().insert(MemberContract.MemberEntry.CONTENT_URI, contentValues);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                context.getContentResolver().insert(MemberContract.MemberEntry.CONTENT_URI, contentValues);
+            }
+        }
+        ).start();
     }
 
     public static boolean isNetworkConnectionAvailable(Context context) {

@@ -18,17 +18,17 @@ public class MemberContentProvider extends ContentProvider {
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase database;
 
-    private static final int MEMBER = 100;
-    private static final int MEMBERS = 101;
+    private static final int MEMBERS = 100;
+    private static final int MEMBER = 101;
 
     private static final UriMatcher uriMathcer;
 
     static {
         uriMathcer = new UriMatcher(UriMatcher.NO_MATCH);
         uriMathcer.addURI(MemberContract.CONTENT_AUTHORITY,
-                MemberContract.MemberEntry.TABLE_NAME, MEMBER);
+                MemberContract.MemberEntry.TABLE_NAME, MEMBERS);
         uriMathcer.addURI(MemberContract.CONTENT_AUTHORITY,
-                MemberContract.MemberEntry.TABLE_NAME + "/#", MEMBERS);
+                MemberContract.MemberEntry.TABLE_NAME + "/#", MEMBER);
     }
 
     @Override

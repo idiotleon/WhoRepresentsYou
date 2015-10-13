@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -38,6 +39,23 @@ public class MemberDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_activity);
         member = new MemberModel();
+
+        if (MainActivity.CUSTOM_SEARCH_INTENT_FILTER.equals(getIntent().getAction())) {
+            member = getIntent()
+                    .getBundleExtra(getString(R.string.bundle_identifier))
+                    .getParcelable(getString(R.string.parcelable_identifier));
+        } else if (Intent.ACTION_SEARCH.equals(getIntent().getAction())) {
+            String zipcode = getIntent().getStringExtra(SearchManager.QUERY);
+            Log.v(LOG_TAG, "zipcode: " + zipcode);
+            Intent mainActivityIntent = new Intent(MemberDetailsActivity.this, MainActivity.class);
+            mainActivityIntent.setAction(MainActivity.CUSTOM_SEARCH_INTENT_FILTER);
+            mainActivityIntent.putExtra(getString(R.string.search_keyword_identifier), zipcode);
+            startActivity(mainActivityIntent);
+        } else if (savedInstanceState != null && savedInstanceState.containsKey(getString(R.string.save_instance_state_details_activity))) {
+            member = savedInstanceState.getParcelable(getString(R.string.save_instance_state_details_activity));
+        }
+
+        refreshPage();
     }
 
     @Override
@@ -72,88 +90,73 @@ public class MemberDetailsActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putParcelable(getString(R.string.save_instance_state_details_activity), member);
+    }
+
+/*    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         handleIntent(intent);
-    }
+    }*/
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        handleIntent(getIntent());
-    }
+    private void refreshPage() {
 
-    private void handleIntent(Intent intent) {
+        TextView textViewName = (TextView) findViewById(R.id.textview_detail_activity_name);
+        TextView textViewParty = (TextView) findViewById(R.id.textview_detail_activity_party);
+        TextView textViewState = (TextView) findViewById(R.id.textview_detail_activity_state);
+        TextView textViewDistrict = (TextView) findViewById(R.id.textview_detail_activity_district);
+        TextView textViewPhone = (TextView) findViewById(R.id.textview_detail_activity_phone);
+        TextView textViewOffice = (TextView) findViewById(R.id.textview_detail_activity_office);
+        TextView textViewLink = (TextView) findViewById(R.id.textview_detail_activity_link);
 
-        if (MainActivity.CUSTOM_SEARCH_INTENT_FILTER.equals(intent.getAction())) {
-            member = getIntent()
-                    .getBundleExtra(getString(R.string.bundle_identifier))
-                    .getParcelable(getString(R.string.parcelable_identifier));
+        CheckBox favoriteCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
 
-            TextView textViewName = (TextView) findViewById(R.id.textview_detail_activity_name);
-            TextView textViewParty = (TextView) findViewById(R.id.textview_detail_activity_party);
-            TextView textViewState = (TextView) findViewById(R.id.textview_detail_activity_state);
-            TextView textViewDistrict = (TextView) findViewById(R.id.textview_detail_activity_district);
-            TextView textViewPhone = (TextView) findViewById(R.id.textview_detail_activity_phone);
-            TextView textViewOffice = (TextView) findViewById(R.id.textview_detail_activity_office);
-            TextView textViewLink = (TextView) findViewById(R.id.textview_detail_activity_link);
-
-            CheckBox favoriteCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
-
-            if (GeneralConstant.FAVORITE_STATUS_TRUE_STATUS_CODE == GeneralHelper.getFavoriteStatus(MemberDetailsActivity.this, member.getName(), 0)) {
-                favoriteCheckBox.setChecked(true);
-            } else {
-                favoriteCheckBox.setChecked(false);
-            }
-
-            favoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        GeneralHelper.markAsFavorite(MemberDetailsActivity.this, member);
-                        Toast.makeText(MemberDetailsActivity.this, "Marked as Favorite.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        GeneralHelper.cancelFavoriteStatus(MemberDetailsActivity.this, member);
-                        Toast.makeText(MemberDetailsActivity.this, "Favorite canceled", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-
-            textViewName.setText(member.getName());
-            textViewParty.setText(member.getParty());
-            textViewState.setText(member.getState());
-            textViewDistrict.setText(member.getDistrict());
-            final String phoneNumber = member.getPhoneNumber();
-            textViewPhone.setText(phoneNumber);
-            textViewPhone.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Uri uri = Uri.parse(phoneNumber);
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
-                }
-            });
-            textViewOffice.setText(member.getOfficeAddress());
-            final String linkUrl = member.getLinkUrl();
-            textViewLink.setText(linkUrl);
-            textViewLink.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Uri uri = Uri.parse(linkUrl);
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
-                }
-            });
-        } else if (Intent.ACTION_SEARCH.equals(intent.getAction()))
-
-        {
-            String zipcode = intent.getStringExtra(SearchManager.QUERY);
-            Log.v(LOG_TAG, "zipcode: " + zipcode);
-            Intent mainActivityIntent = new Intent(MemberDetailsActivity.this, MainActivity.class);
-            mainActivityIntent.setAction(MainActivity.CUSTOM_SEARCH_INTENT_FILTER);
-            mainActivityIntent.putExtra(getString(R.string.search_keyword_identifier), zipcode);
-            startActivity(mainActivityIntent);
+        if (GeneralConstant.FAVORITE_STATUS_TRUE_STATUS_CODE == GeneralHelper.getFavoriteStatus(MemberDetailsActivity.this, member.getName(), 0)) {
+            favoriteCheckBox.setChecked(true);
+        } else {
+            favoriteCheckBox.setChecked(false);
         }
+
+        favoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    GeneralHelper.markAsFavorite(MemberDetailsActivity.this, member);
+                    Toast.makeText(MemberDetailsActivity.this, "Marked as Favorite.", Toast.LENGTH_SHORT).show();
+                } else {
+                    GeneralHelper.cancelFavoriteStatus(MemberDetailsActivity.this, member);
+                    Toast.makeText(MemberDetailsActivity.this, "Favorite canceled", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        textViewName.setText(member.getName());
+        textViewParty.setText(member.getParty());
+        textViewState.setText(member.getState());
+        textViewDistrict.setText(member.getDistrict());
+        final String phoneNumber = member.getPhoneNumber();
+        textViewPhone.setText(phoneNumber);
+        textViewPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse(phoneNumber);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
+        textViewOffice.setText(member.getOfficeAddress());
+        final String linkUrl = member.getLinkUrl();
+        textViewLink.setText(linkUrl);
+        textViewLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse(linkUrl);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

@@ -3,9 +3,14 @@
     <string name="action_search">Search</string>
     <string name="search_hint">Please type in zipcode</string>
     <string name="empty_textview">Nothing to display</string>
+
+    <string name="title_text_share">Share</string>
+    <string name="network_unavailable">Network is not available.</string>
+
+
     <string name="parcelable_identifier">parcelable_identifier</string>
     <string name="bundle_identifier">bundle_identifier</string>
     <string name="search_keyword_identifier">search_keyword_identifier</string>
-    <string name="title_text_share">Share</string>
-    <string name="network_unavailable">Network is not available.</string>
+    <string name="save_instance_state_main_activity">save_instance_state_main_activity</string>
+    <string name="save_instance_state_details_activity">save_instance_state_details_activity</string>
 </resources>
