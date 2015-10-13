@@ -1,8 +1,10 @@
-package com.leontheprofessional.test.whorepresentsyou;
+package com.leontheprofessional.test.whorepresentsyou.activity;
 
+import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,11 +22,10 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.leontheprofessional.test.whorepresentsyou.R;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralConstant;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
-
-import java.lang.reflect.Member;
 
 public class MemberDetailsActivity extends AppCompatActivity {
 
@@ -37,7 +38,7 @@ public class MemberDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.detail_activity);
+        setContentView(R.layout.details);
         member = new MemberModel();
 
         if (MainActivity.CUSTOM_SEARCH_INTENT_FILTER.equals(getIntent().getAction())) {
@@ -103,13 +104,13 @@ public class MemberDetailsActivity extends AppCompatActivity {
 
     private void refreshPage() {
 
-        TextView textViewName = (TextView) findViewById(R.id.textview_detail_activity_name);
-        TextView textViewParty = (TextView) findViewById(R.id.textview_detail_activity_party);
-        TextView textViewState = (TextView) findViewById(R.id.textview_detail_activity_state);
-        TextView textViewDistrict = (TextView) findViewById(R.id.textview_detail_activity_district);
-        TextView textViewPhone = (TextView) findViewById(R.id.textview_detail_activity_phone);
-        TextView textViewOffice = (TextView) findViewById(R.id.textview_detail_activity_office);
-        TextView textViewLink = (TextView) findViewById(R.id.textview_detail_activity_link);
+        TextView textViewName = (TextView) findViewById(R.id.textview_detail_name);
+        TextView textViewParty = (TextView) findViewById(R.id.textview_detail_party);
+        TextView textViewState = (TextView) findViewById(R.id.textview_detail_state);
+        TextView textViewDistrict = (TextView) findViewById(R.id.textview_detail_district);
+        TextView textViewPhone = (TextView) findViewById(R.id.textview_detail_phone);
+        TextView textViewOffice = (TextView) findViewById(R.id.textview_detail_office);
+        TextView textViewLink = (TextView) findViewById(R.id.textview_detail_link);
 
         CheckBox favoriteCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
 
@@ -142,7 +143,20 @@ public class MemberDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Uri uri = Uri.parse(phoneNumber);
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                Intent intent = new Intent(Intent.ACTION_CALL, uri);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for Activity#requestPermissions for more details.
+                        Log.e(LOG_TAG, getString(R.string.call_permission_rejected_by_user));
+                        return;
+                    }
+                }
                 startActivity(intent);
             }
         });

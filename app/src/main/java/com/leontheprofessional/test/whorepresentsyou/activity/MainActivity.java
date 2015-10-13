@@ -1,5 +1,8 @@
-package com.leontheprofessional.test.whorepresentsyou;
+package com.leontheprofessional.test.whorepresentsyou.activity;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +21,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.leontheprofessional.test.whorepresentsyou.R;
+import com.leontheprofessional.test.whorepresentsyou.activity.fragment.DisplayFragment;
 import com.leontheprofessional.test.whorepresentsyou.adapter.CustomAdapter;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
 import com.leontheprofessional.test.whorepresentsyou.jsonparsing.WhoRepresentsYouApi;
@@ -47,21 +52,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         members = new ArrayList<>();
 
         if (savedInstanceState != null && savedInstanceState.containsKey(getString(R.string.save_instance_state_main_activity))) {
             members = savedInstanceState.getParcelableArrayList(getString(R.string.save_instance_state_main_activity));
+        } else if (GeneralHelper.isNetworkConnectionAvailable(MainActivity.this)) {
+            refreshPage(getIntent());
+        } else {
+            showFavorite();
         }
-
-        listView = (ListView) findViewById(R.id.listview_main_activity);
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        handleIntent(getIntent());
     }
 
     @Override
@@ -70,12 +69,6 @@ public class MainActivity extends AppCompatActivity {
         outState.putParcelableArrayList(getString(R.string.save_instance_state_main_activity), members);
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-        handleIntent(intent);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -104,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void handleIntent(Intent intent) {
+    private void refreshPage(Intent intent) {
 
         Log.v(LOG_TAG, "handleIntent() executed");
 
@@ -138,25 +131,41 @@ public class MainActivity extends AppCompatActivity {
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
 
-                        customAdapter = new CustomAdapter(MainActivity.this, members);
+                        if (GeneralHelper.isTablet(MainActivity.this)) {
+                            Log.v(LOG_TAG, "This is a tablet");
+                            setContentView(R.layout.fragment_main);
+                            Bundle arguments = new Bundle();
+                            arguments.putParcelableArrayList(getString(R.string.fragment_argument_identifier), members);
+                            DisplayFragment displayFragment = new DisplayFragment();
+                            displayFragment.setArguments(arguments);
+                            FragmentManager fragmentManager = getFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            fragmentTransaction.replace(R.id.container1, displayFragment);
+                            fragmentTransaction.addToBackStack(null);
 
-                        listView.setAdapter(customAdapter);
+                            fragmentTransaction.commit();
+                        } else {
+                            setContentView(R.layout.activity_main);
+                            listView = (ListView) findViewById(R.id.listview_main_activity);
 
-                        TextView emptyTextView = new TextView(MainActivity.this);
-                        emptyTextView.setText(getString(R.string.empty_textview));
-                        listView.setEmptyView(emptyTextView);
+                            customAdapter = new CustomAdapter(MainActivity.this, members);
+                            listView.setAdapter(customAdapter);
+                            TextView emptyTextView = new TextView(MainActivity.this);
+                            emptyTextView.setText(getString(R.string.empty_textview));
+                            listView.setEmptyView(emptyTextView);
 
-                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                Intent intent = new Intent(MainActivity.this, MemberDetailsActivity.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelable(getString(R.string.parcelable_identifier), members.get(position));
-                                intent.putExtra(getString(R.string.bundle_identifier), bundle);
-                                intent.setAction(CUSTOM_SEARCH_INTENT_FILTER);
-                                startActivity(intent);
-                            }
-                        });
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    Intent intent = new Intent(MainActivity.this, MemberDetailsActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putParcelable(getString(R.string.parcelable_identifier), members.get(position));
+                                    intent.putExtra(getString(R.string.bundle_identifier), bundle);
+                                    intent.setAction(CUSTOM_SEARCH_INTENT_FILTER);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
                     }
                 }.execute();
             } else {
@@ -165,5 +174,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(MainActivity.this, getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void showFavorite() {
+
     }
 }
