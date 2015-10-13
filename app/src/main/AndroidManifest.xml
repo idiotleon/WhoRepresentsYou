@@ -39,7 +39,7 @@
         </activity>
 
         <provider
-            android:name=".provider.MemberContentProvider"
+            android:name="com.leontheprofessional.test.whorepresentsyou.provider.MemberContentProvider"
             android:authorities="com.leontheprofessional.test.whorepresentsyou.Provider" />
     </application>
 
