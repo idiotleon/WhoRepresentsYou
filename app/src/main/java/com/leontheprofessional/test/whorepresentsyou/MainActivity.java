@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -49,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         members = new ArrayList<>();
 
+        if (savedInstanceState != null && savedInstanceState.containsKey(getString(R.string.save_instance_state_main_activity))) {
+            members = savedInstanceState.getParcelableArrayList(getString(R.string.save_instance_state_main_activity));
+        }
+
         listView = (ListView) findViewById(R.id.listview_main_activity);
     }
 
@@ -57,6 +62,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         handleIntent(getIntent());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putParcelableArrayList(getString(R.string.save_instance_state_main_activity), members);
     }
 
     @Override
@@ -151,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Log.e(LOG_TAG, "Zipcode is incorrect.");
             }
-        }else{
+        } else {
             Toast.makeText(MainActivity.this, getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
         }
     }
