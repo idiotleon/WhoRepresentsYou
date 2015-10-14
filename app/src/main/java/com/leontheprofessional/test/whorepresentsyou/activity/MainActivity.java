@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     private double latitude = 0.0;
     private double longitude = 0.0;
-    private String zipcode;
+    private String zipCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +66,13 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null && savedInstanceState.containsKey(getString(R.string.save_instance_state_main_activity))) {
             members = savedInstanceState.getParcelableArrayList(getString(R.string.save_instance_state_main_activity));
             refreshListFragment(members);
-        } else if (GeneralHelper.isNetworkConnectionAvailable(MainActivity.this)) {
-            refreshPage(getIntent());
-            refreshListFragment(members);
         } else {
             showFavorite();
+        }
+
+        if (GeneralHelper.isNetworkConnectionAvailable(MainActivity.this)) {
+            refreshPage(getIntent());
+            refreshListFragment(members);
         }
 
         if (GeneralHelper.isTablet(MainActivity.this)) {
@@ -93,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
 */
                 }
             });
-            refreshListFragment(members);
 
             Button representativeSearchButton = (Button) findViewById(R.id.btn_search_representative);
             representativeSearchButton.setOnClickListener(new View.OnClickListener() {
@@ -101,27 +102,31 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     final String keyword = autoCompleteTextView.getText().toString();
                     GeneralHelper.hideSoftKeyBoard(MainActivity.this, v);
-                    new AsyncTask<Void, Void, Void>() {
-                        @Override
-                        protected Void doInBackground(Void... params) {
-                            WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
-                            try {
-                                members.clear();
-                                members = whoRepresentsYouApi.searchRepresentatives(MainActivity.this, keyword);
-                            } catch (MalformedURLException e) {
-                                e.printStackTrace();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                    if (keyword != null && keyword.length() > 0) {
+                        new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... params) {
+                                WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
+                                try {
+                                    members.clear();
+                                    members = whoRepresentsYouApi.searchRepresentatives(MainActivity.this, keyword);
+                                } catch (MalformedURLException e) {
+                                    e.printStackTrace();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                return null;
                             }
-                            return null;
-                        }
 
-                        @Override
-                        protected void onPostExecute(Void aVoid) {
-                            super.onPostExecute(aVoid);
-                            refreshListFragment(members);
-                        }
-                    }.execute();
+                            @Override
+                            protected void onPostExecute(Void aVoid) {
+                                super.onPostExecute(aVoid);
+                                refreshListFragment(members);
+                            }
+                        }.execute();
+                    } else {
+                        Toast.makeText(MainActivity.this, R.string.please_input_a_keyword, Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
@@ -130,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     final String keyword = autoCompleteTextView.getText().toString();
-                    if (keyword == null && keyword.length() == 0) {
-
+                    if (keyword == null || keyword.length() == 0) {
+                        Toast.makeText(MainActivity.this, R.string.please_input_a_keyword, Toast.LENGTH_SHORT).show();
                     } else {
                         GeneralHelper.hideSoftKeyBoard(MainActivity.this, v);
                         new AsyncTask<Void, Void, Void>() {
@@ -190,8 +195,8 @@ public class MainActivity extends AppCompatActivity {
                                                  Log.v(LOG_TAG, "longitude, Geocoder:  " + longitude);
                                                  List<Address> addresses = geocoder.getFromLocation(latitude, longitude, ADDRESS_MAX_RESULT_NUMBER);
                                                  if (addresses != null && addresses.size() > 0) {
-                                                     zipcode = addresses.get(0).getPostalCode();
-                                                     Log.v(LOG_TAG, "zipcode, Geocoder: " + zipcode);
+                                                     zipCode = addresses.get(0).getPostalCode();
+                                                     Log.v(LOG_TAG, "zipCode, Geocoder: " + zipCode);
                                                      Log.v(LOG_TAG, "countryCode, Geocoder: " + addresses.get(0).getCountryCode());
                                                      Log.v(LOG_TAG, "addressLine, Geocoder: " + addresses.get(0).getAddressLine(0));
                                                      Log.v(LOG_TAG, "locality, Geocoder: " + addresses.get(0).getLocality());
@@ -200,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
                                                      Log.e(LOG_TAG, "addresses is null");
                                                  }
 
-                                                 if (zipcode != null && zipcode.length() > 0) {
+                                                 if (zipCode != null && zipCode.length() > 0) {
                                                      new AsyncTask<Void, Void, Void>() {
                                                          @Override
                                                          protected Void doInBackground(Void... params) {
@@ -208,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
                                                              WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
                                                              try {
                                                                  members.clear();
-                                                                 members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipcode);
+                                                                 members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipCode);
                                                                  Log.v(LOG_TAG, "members: " + members.get(1).getName());
                                                              } catch (JSONException e) {
                                                                  e.printStackTrace();
@@ -238,8 +243,22 @@ public class MainActivity extends AppCompatActivity {
                                          }
                                      }
                                  }
-
         );
+    }
+
+    private void showFavorite() {
+        try {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    members.clear();
+                    members = GeneralHelper.getAllFavoriteMembers(MainActivity.this);
+                    refreshListFragment(members);
+                }
+            }).run();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void refreshListFragment(ArrayList<MemberModel> members) {
@@ -284,6 +303,8 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_search:
                 onSearchRequested();
                 return true;
+            case R.id.action_show_favorite:
+                showFavorite();
             default:
                 return false;
         }
@@ -292,21 +313,21 @@ public class MainActivity extends AppCompatActivity {
     private void refreshPage(Intent intent) {
         Log.v(LOG_TAG, "handleIntent() executed");
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            zipcode = intent.getStringExtra(SearchManager.QUERY);
+            zipCode = intent.getStringExtra(SearchManager.QUERY);
         } else if (CUSTOM_SEARCH_INTENT_FILTER.equals(intent.getAction())) {
-            zipcode = intent.getStringExtra(getString(R.string.search_keyword_identifier));
-            Log.v(LOG_TAG, "zipcode: " + zipcode);
+            zipCode = intent.getStringExtra(getString(R.string.search_keyword_identifier));
+            Log.v(LOG_TAG, "zipCode: " + zipCode);
         }
 
         if (GeneralHelper.isNetworkConnectionAvailable(MainActivity.this)) {
-            if (isZipCode(zipcode)) {
+            if (isZipCode(zipCode)) {
                 new AsyncTask<Void, Void, Void>() {
                     @Override
                     protected Void doInBackground(Void... params) {
                         WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
                         try {
                             members.clear();
-                            members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipcode);
+                            members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipCode);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         } catch (MalformedURLException e) {
@@ -341,9 +362,5 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(MainActivity.this, getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void showFavorite() {
-
     }
 }
