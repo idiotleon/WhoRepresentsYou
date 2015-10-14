@@ -1,8 +1,10 @@
 package com.leontheprofessional.test.whorepresentsyou.activity;
 
 import android.app.SearchManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -15,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.support.v7.widget.ShareActionProvider;
 import android.widget.CompoundButton;
@@ -25,6 +28,7 @@ import com.leontheprofessional.test.whorepresentsyou.R;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralConstant;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
+import com.leontheprofessional.test.whorepresentsyou.provider.MemberContract;
 
 public class MemberDetailsActivity extends AppCompatActivity {
 
@@ -33,6 +37,9 @@ public class MemberDetailsActivity extends AppCompatActivity {
     private ShareActionProvider shareActionProvider;
 
     private MemberModel member;
+
+    private CheckBox favoriteCheckBox;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,12 +127,16 @@ public class MemberDetailsActivity extends AppCompatActivity {
         textViewOffice.setTypeface(typeface);
         textViewLink.setTypeface(typeface);
 
-        CheckBox favoriteCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
+        favoriteCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
 
-        if (GeneralConstant.FAVORITE_STATUS_TRUE_STATUS_CODE == GeneralHelper.getFavoriteStatus(MemberDetailsActivity.this, member.getName(), 0)) {
+        int current_favorite_status_code = GeneralHelper.getFavoriteStatus(MemberDetailsActivity.this, member);
+        Log.v(LOG_TAG, "current_favorite_status_code: " + current_favorite_status_code);
+        if (GeneralConstant.FAVORITE_STATUS_TRUE_STATUS_CODE == current_favorite_status_code) {
             favoriteCheckBox.setChecked(true);
+            Log.v(LOG_TAG, "favoriteCheckBox.setChecked(true)");
         } else {
             favoriteCheckBox.setChecked(false);
+            Log.v(LOG_TAG, "favoriteCheckBox.setChecked(false)");
         }
 
         favoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -150,12 +161,12 @@ public class MemberDetailsActivity extends AppCompatActivity {
         textViewPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(GeneralHelper.isTelephonyAvailable(MemberDetailsActivity.this)){
-                Uri uri = Uri.parse("tel:" + phoneNumber);
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(uri);
-                startActivity(intent);
-            }else{
+                if (GeneralHelper.isTelephonyAvailable(MemberDetailsActivity.this)) {
+                    Uri uri = Uri.parse("tel:" + phoneNumber);
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(uri);
+                    startActivity(intent);
+                } else {
                     Toast.makeText(MemberDetailsActivity.this, R.string.telephony_unavailable, Toast.LENGTH_SHORT).show();
                 }
             }

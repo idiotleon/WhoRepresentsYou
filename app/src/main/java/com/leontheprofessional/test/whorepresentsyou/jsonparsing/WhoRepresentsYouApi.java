@@ -197,7 +197,7 @@ public class WhoRepresentsYouApi {
                 link = itemJson.getString(WRY_LINK);
 
                 MemberModel member = new MemberModel(name, party, state, districtNumber, phoneNumber, officeAddress, link);
-                GeneralHelper.saveMembers(context, member);
+//                GeneralHelper.saveMember(context, member);
                 members.add(member);
             }
 

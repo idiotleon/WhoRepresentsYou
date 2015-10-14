@@ -20,7 +20,7 @@
             android:id="@+id/textview_detail_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="4"
+            android:layout_weight="21"
             android:gravity="left|center_vertical"
             android:paddingLeft="@dimen/padding_detail"
             android:textSize="@dimen/text_size_listview_item" />
@@ -29,9 +29,10 @@
             android:id="@+id/checkbox_favorite_star_button"
             style="?android:attr/starStyle"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
-            android:layout_weight="1"
+            android:layout_weight="3"
+            android:button="@drawable/favorite_button"
             android:paddingRight="@dimen/padding_detail" />
     </LinearLayout>
 

@@ -22,11 +22,9 @@ public class MemberContract {
         public static final String COLUMN_MEMBER_STATE = "member_state";
         public static final String COLUMN_MEMBER_DISTRICT = "member_district";
         public static final String COLUMN_MEMBER_PHONE = "member_phone";
+        public static final String COLUMN_MEMBER_PARTY = "member_party";
         public static final String COLUMN_MEMBER_OFFICE = "member_office";
         public static final String COLUMN_MEMBER_WEBSITE = "member_website";
-        public static final String COLUMN_MEMBER_FAVORITE_STATUS_CODE = "member_favorite_status_code";
-
-        public static final String COLUMN_MEMBER_TYPE = "member_type";
 
         public static final String Content_TYPE = "vnd.android.cursor.dir/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
         public static final String Content_ITEM_TYPE = "vnd.android.cursor.item/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;

@@ -9,11 +9,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 /**
  * Created by Leon on 10/12/2015.
  */
 public class MemberContentProvider extends ContentProvider {
+
+    private static final String LOG_TAG = MemberContentProvider.class.getSimpleName();
 
     private DatabaseHelper databaseHelper;
     private SQLiteDatabase database;
@@ -28,7 +31,7 @@ public class MemberContentProvider extends ContentProvider {
         uriMathcer.addURI(MemberContract.CONTENT_AUTHORITY,
                 MemberContract.MemberEntry.TABLE_NAME, MEMBERS);
         uriMathcer.addURI(MemberContract.CONTENT_AUTHORITY,
-                MemberContract.MemberEntry.TABLE_NAME + "/#", MEMBER);
+                MemberContract.MemberEntry.TABLE_NAME + "/*", MEMBER);
     }
 
     @Override
@@ -58,6 +61,7 @@ public class MemberContentProvider extends ContentProvider {
                 break;
         }
 
+        Log.v(LOG_TAG, "queryBuilder: " + queryBuilder.toString());
         Cursor cursor = queryBuilder.query(database, projection, selection, selectionArgs, groupBy, having, sortOrder);
 
         return cursor;
@@ -96,46 +100,53 @@ public class MemberContentProvider extends ContentProvider {
                 }
         }
 
+        Log.v(LOG_TAG, "insertedId: " + insertedId.toString());
         return insertedId;
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
+        Log.v(LOG_TAG, "delete() executed.");
         database = databaseHelper.getWritableDatabase();
 
-        String name;
+        String telephoneNumber;
 
         int deletedCount = 0;
 
         switch (uriMathcer.match(uri)) {
             case MEMBER:
-                name = uri.getPathSegments().get(1);
-                selection = MemberContract.MemberEntry.COLUMN_MEMBER_NAME + " = ?";
-                selectionArgs = new String[]{name};
+                Log.v(LOG_TAG, "uri, delete(): " + uri.toString());
+                telephoneNumber = uri.getPathSegments().get(1);
+                selection = MemberContract.MemberEntry.COLUMN_MEMBER_PHONE + " = ?";
+                Log.v(LOG_TAG, "selection, delete(): " + selection);
+                selectionArgs = new String[]{telephoneNumber};
+                Log.v(LOG_TAG, "selectionArgs, delete(): " + selectionArgs[0]);
                 deletedCount = database.delete(MemberContract.MemberEntry.TABLE_NAME, selection, selectionArgs);
                 getContext().getContentResolver().notifyChange(uri, null);
                 break;
             case MEMBERS:
+                Log.v(LOG_TAG, "uri MEMBERS selected");
                 deletedCount = database.delete(MemberContract.MemberEntry.TABLE_NAME, selection, selectionArgs);
                 break;
         }
 
+        Log.v(LOG_TAG, "deleletedCount: " + deletedCount);
         return deletedCount;
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
 
-        String name;
+        String telephoneNumber;
         int updatedRowsCount = 0;
         switch (uriMathcer.match(uri)) {
             case MEMBERS:
                 updatedRowsCount = database.update(MemberContract.MemberEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             case MEMBER:
-                name = uri.getPathSegments().get(1);
-                selection = MemberContract.MemberEntry.COLUMN_MEMBER_NAME + " = ?";
-                selectionArgs = new String[]{name};
+                telephoneNumber = uri.getPathSegments().get(1);
+                selection = MemberContract.MemberEntry.COLUMN_MEMBER_PHONE + " = ?";
+                selectionArgs = new String[]{telephoneNumber};
                 updatedRowsCount = database.update(MemberContract.MemberEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
         }
