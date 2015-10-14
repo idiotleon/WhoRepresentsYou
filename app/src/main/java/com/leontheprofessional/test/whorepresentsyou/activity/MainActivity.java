@@ -1,19 +1,22 @@
 package com.leontheprofessional.test.whorepresentsyou.activity;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,13 +33,16 @@ import com.leontheprofessional.test.whorepresentsyou.activity.fragment.adapter.C
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
 import com.leontheprofessional.test.whorepresentsyou.jsonparsing.WhoRepresentsYouApi;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
+import com.leontheprofessional.test.whorepresentsyou.service.LocationTracker;
 
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
-import static com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper.cancelFavoriteStatus;
 import static com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper.isZipCode;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,8 +51,16 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String CUSTOM_SEARCH_INTENT_FILTER = "com.leontheprofessional.test.CustomSearchIntentFilter";
 
+    private int ADDRESS_MAX_RESULT_NUMBER = 1;
+    private int MIN_DISTANCE_CHANGE_FOR_LOCATION_UPDATES = 10;
+    private int MIN_TIME_DURATION_FOR_LOCATION_UPDATES = 1000;
+
     private ArrayList<MemberModel> members;
 
+    private double latitude = 0.0;
+    private double longitude = 0.0;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
     private String zipcode;
 
@@ -85,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
 */
                 }
             });
-
             refreshListFragment(members);
 
             Button representativeSearchButton = (Button) findViewById(R.id.btn_search_representative);
@@ -123,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     final String keyword = autoCompleteTextView.getText().toString();
-                    if (keyword == null && keyword.length()==0) {
+                    if (keyword == null && keyword.length() == 0) {
 
                     } else {
                         GeneralHelper.hideSoftKeyBoard(MainActivity.this, v);
@@ -154,8 +167,70 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-    }
 
+        FloatingActionButton myFab = (FloatingActionButton) findViewById(R.id.myFAB);
+        myFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v(LOG_TAG, "FAB clicked");
+                if (GeneralHelper.isNetworkConnectionAvailable(MainActivity.this)) {
+
+                    LocationTracker locationTracker = new LocationTracker(MainActivity.this);
+                    if (locationTracker.canGetLocation()) {
+                        latitude = locationTracker.getLatitude();
+                        Log.v(LOG_TAG, "latitude:  " + latitude);
+                        longitude = locationTracker.getLongitude();
+                        Log.v(LOG_TAG, "longitude:  " + longitude);
+                    } else {
+                        locationTracker.showSettingsAlert();
+                    }
+                    locationTracker.stopUsingGPS();
+
+                    Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                    try {
+                        List<Address> addresses = geocoder.getFromLocation(latitude, longitude, ADDRESS_MAX_RESULT_NUMBER);
+                        if (addresses != null && addresses.size() > 0) {
+                            zipcode = addresses.get(0).getPostalCode();
+                            Log.v(LOG_TAG, "zipcode: " + zipcode);
+                        } else {
+                            Log.e(LOG_TAG, "addresses is null");
+                        }
+
+                        new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... params) {
+
+                                WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
+                                try {
+                                    members.clear();
+                                    members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipcode);
+                                    Log.v(LOG_TAG, "members: " + members.get(1).getName());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (MalformedURLException e) {
+                                    e.printStackTrace();
+                                }
+
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Void aVoid) {
+                                super.onPostExecute(aVoid);
+
+                                refreshListFragment(members);
+                            }
+                        }.execute();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 
     private void refreshListFragment(ArrayList<MemberModel> members) {
         DisplayListFragment displayListFragment = new DisplayListFragment();
