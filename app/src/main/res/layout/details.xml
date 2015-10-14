@@ -39,12 +39,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/padding_detail">
+        android:paddingLeft="@dimen/padding_detail"
+        android:paddingRight="@dimen/padding_detail">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+        <TextView
+            android:id="@+id/textview_detail_state"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="@dimen/padding_detail"
+            android:textSize="@dimen/text_size_listview_item" />
+
+        <TextView
+            android:id="@+id/textview_detail_district"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="@dimen/padding_detail"
+            android:textSize="@dimen/text_size_listview_item" />
 
         <TextView
             android:id="@+id/textview_detail_party"
@@ -52,49 +66,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="left|center_vertical"
-            android:paddingLeft="@dimen/padding_detail"
-            android:textSize="@dimen/text_size_listview_item" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/padding_detail">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/textview_detail_state"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="left|center_vertical"
-            android:paddingLeft="@dimen/padding_detail"
-            android:textSize="@dimen/text_size_listview_item" />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/padding_detail">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/textview_detail_district"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left|center_vertical"
-            android:paddingLeft="@dimen/padding_detail"
             android:textSize="@dimen/text_size_listview_item" />
     </LinearLayout>
 
