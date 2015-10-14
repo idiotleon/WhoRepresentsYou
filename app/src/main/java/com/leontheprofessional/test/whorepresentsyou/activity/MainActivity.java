@@ -5,10 +5,9 @@ import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -52,16 +51,11 @@ public class MainActivity extends AppCompatActivity {
     public static final String CUSTOM_SEARCH_INTENT_FILTER = "com.leontheprofessional.test.CustomSearchIntentFilter";
 
     private int ADDRESS_MAX_RESULT_NUMBER = 1;
-    private int MIN_DISTANCE_CHANGE_FOR_LOCATION_UPDATES = 10;
-    private int MIN_TIME_DURATION_FOR_LOCATION_UPDATES = 1000;
 
     private ArrayList<MemberModel> members;
 
     private double latitude = 0.0;
     private double longitude = 0.0;
-    private LocationManager locationManager;
-    private LocationListener locationListener;
-
     private String zipcode;
 
     @Override
@@ -166,76 +160,91 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
+
+            Typeface typeface = Typeface.createFromAsset(getAssets(), "optimale_bold.ttf");
+            representativeSearchButton.setTypeface(typeface);
+            senatorSearchButton.setTypeface(typeface);
         }
 
         FloatingActionButton myFab = (FloatingActionButton) findViewById(R.id.myFAB);
         myFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.v(LOG_TAG, "FAB clicked");
-                if (GeneralHelper.isNetworkConnectionAvailable(MainActivity.this)) {
+                                     @Override
+                                     public void onClick(View v) {
+                                         Log.v(LOG_TAG, "FAB clicked");
+                                         if (GeneralHelper.isNetworkConnectionAvailable(MainActivity.this)) {
 
-                    LocationTracker locationTracker = new LocationTracker(MainActivity.this);
-                    if (locationTracker.canGetLocation()) {
-                        latitude = locationTracker.getLatitude();
-                        Log.v(LOG_TAG, "latitude:  " + latitude);
-                        longitude = locationTracker.getLongitude();
-                        Log.v(LOG_TAG, "longitude:  " + longitude);
-                    } else {
-                        locationTracker.showSettingsAlert();
-                    }
-                    locationTracker.stopUsingGPS();
+                                             LocationTracker locationTracker = new LocationTracker(MainActivity.this);
+                                             if (locationTracker.canGetLocation()) {
+                                                 latitude = locationTracker.getLatitude();
+                                                 Log.v(LOG_TAG, "latitude:  " + latitude);
+                                                 longitude = locationTracker.getLongitude();
+                                                 Log.v(LOG_TAG, "longitude:  " + longitude);
+                                             } else {
+                                                 locationTracker.showSettingsAlert();
+                                             }
+                                             locationTracker.stopUsingGPS();
 
-                    Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-                    try {
-                        List<Address> addresses = geocoder.getFromLocation(latitude, longitude, ADDRESS_MAX_RESULT_NUMBER);
-                        if (addresses != null && addresses.size() > 0) {
-                            zipcode = addresses.get(0).getPostalCode();
-                            Log.v(LOG_TAG, "zipcode: " + zipcode);
-                        } else {
-                            Log.e(LOG_TAG, "addresses is null");
-                        }
+                                             Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                                             try {
+                                                 Log.v(LOG_TAG, "latitude, Geocoder:  " + latitude);
+                                                 Log.v(LOG_TAG, "longitude, Geocoder:  " + longitude);
+                                                 List<Address> addresses = geocoder.getFromLocation(latitude, longitude, ADDRESS_MAX_RESULT_NUMBER);
+                                                 if (addresses != null && addresses.size() > 0) {
+                                                     zipcode = addresses.get(0).getPostalCode();
+                                                     Log.v(LOG_TAG, "zipcode, Geocoder: " + zipcode);
+                                                     Log.v(LOG_TAG, "countryCode, Geocoder: " + addresses.get(0).getCountryCode());
+                                                     Log.v(LOG_TAG, "addressLine, Geocoder: " + addresses.get(0).getAddressLine(0));
+                                                     Log.v(LOG_TAG, "locality, Geocoder: " + addresses.get(0).getLocality());
+                                                     Log.v(LOG_TAG, "knownName, Geocoder: " + addresses.get(0).getFeatureName());
+                                                 } else {
+                                                     Log.e(LOG_TAG, "addresses is null");
+                                                 }
 
-                        new AsyncTask<Void, Void, Void>() {
-                            @Override
-                            protected Void doInBackground(Void... params) {
+                                                 if (zipcode != null && zipcode.length() > 0) {
+                                                     new AsyncTask<Void, Void, Void>() {
+                                                         @Override
+                                                         protected Void doInBackground(Void... params) {
 
-                                WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
-                                try {
-                                    members.clear();
-                                    members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipcode);
-                                    Log.v(LOG_TAG, "members: " + members.get(1).getName());
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (MalformedURLException e) {
-                                    e.printStackTrace();
-                                }
+                                                             WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
+                                                             try {
+                                                                 members.clear();
+                                                                 members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipcode);
+                                                                 Log.v(LOG_TAG, "members: " + members.get(1).getName());
+                                                             } catch (JSONException e) {
+                                                                 e.printStackTrace();
+                                                             } catch (MalformedURLException e) {
+                                                                 e.printStackTrace();
+                                                             }
 
-                                return null;
-                            }
+                                                             return null;
+                                                         }
 
-                            @Override
-                            protected void onPostExecute(Void aVoid) {
-                                super.onPostExecute(aVoid);
+                                                         @Override
+                                                         protected void onPostExecute(Void aVoid) {
+                                                             super.onPostExecute(aVoid);
 
-                                refreshListFragment(members);
-                            }
-                        }.execute();
+                                                             refreshListFragment(members);
+                                                         }
+                                                     }.execute();
+                                                 } else {
+                                                     Toast.makeText(MainActivity.this, R.string.zipcode_not_known, Toast.LENGTH_SHORT).show();
+                                                 }
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Toast.makeText(MainActivity.this, getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                                             } catch (IOException e) {
+                                                 e.printStackTrace();
+                                             }
+                                         } else {
+                                             Toast.makeText(MainActivity.this, getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
+                                         }
+                                     }
+                                 }
+
+        );
     }
 
     private void refreshListFragment(ArrayList<MemberModel> members) {
         DisplayListFragment displayListFragment = new DisplayListFragment();
         CustomListFragmentAdapter customListFragmentAdapter = new CustomListFragmentAdapter(MainActivity.this, members);
-//        if (members != null && members.size() > 0) {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(getString(R.string.fragment_argument_identifier3), members);
 
@@ -245,13 +254,6 @@ public class MainActivity extends AppCompatActivity {
         displayListFragment.setArguments(bundle);
         displayListFragment.setListAdapter(customListFragmentAdapter);
         fragmentTransaction.commit();
-/*        } else {
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            displayListFragment.setListAdapter(customListFragmentAdapter);
-            fragmentTransaction.remove(displayListFragment);
-            fragmentTransaction.commit();
-        }*/
     }
 
     @Override

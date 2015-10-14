@@ -1,10 +1,9 @@
 package com.leontheprofessional.test.whorepresentsyou.activity;
 
-import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -112,6 +111,15 @@ public class MemberDetailsActivity extends AppCompatActivity {
         TextView textViewOffice = (TextView) findViewById(R.id.textview_detail_office);
         TextView textViewLink = (TextView) findViewById(R.id.textview_detail_link);
 
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "optimale_bold.ttf");
+        textViewName.setTypeface(typeface);
+        textViewParty.setTypeface(typeface);
+        textViewState.setTypeface(typeface);
+        textViewDistrict.setTypeface(typeface);
+        textViewPhone.setTypeface(typeface);
+        textViewOffice.setTypeface(typeface);
+        textViewLink.setTypeface(typeface);
+
         CheckBox favoriteCheckBox = (CheckBox) findViewById(R.id.checkbox_favorite_star_button);
 
         if (GeneralConstant.FAVORITE_STATUS_TRUE_STATUS_CODE == GeneralHelper.getFavoriteStatus(MemberDetailsActivity.this, member.getName(), 0)) {
@@ -142,22 +150,14 @@ public class MemberDetailsActivity extends AppCompatActivity {
         textViewPhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse(phoneNumber);
-                Intent intent = new Intent(Intent.ACTION_CALL, uri);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for Activity#requestPermissions for more details.
-                        Log.e(LOG_TAG, getString(R.string.call_permission_rejected_by_user));
-                        return;
-                    }
-                }
+                if(GeneralHelper.isTelephonyAvailable(MemberDetailsActivity.this)){
+                Uri uri = Uri.parse("tel:" + phoneNumber);
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(uri);
                 startActivity(intent);
+            }else{
+                    Toast.makeText(MemberDetailsActivity.this, R.string.telephony_unavailable, Toast.LENGTH_SHORT).show();
+                }
             }
         });
         textViewOffice.setText(member.getOfficeAddress());

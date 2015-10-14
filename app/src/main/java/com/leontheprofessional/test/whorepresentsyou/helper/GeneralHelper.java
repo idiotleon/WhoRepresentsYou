@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -25,6 +26,11 @@ import com.leontheprofessional.test.whorepresentsyou.provider.MemberContract;
 public class GeneralHelper {
 
     private static final String LOG_TAG = GeneralHelper.class.getSimpleName();
+
+    public static boolean isTelephonyAvailable(Context context){
+        TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        return telephonyManager!=null && telephonyManager.getSimState()==TelephonyManager.SIM_STATE_READY;
+    }
 
     public static void hideSoftKeyBoard(Context context, View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);

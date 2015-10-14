@@ -1,6 +1,7 @@
 package com.leontheprofessional.test.whorepresentsyou.activity.fragment.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,12 +46,19 @@ public class CustomListFragmentAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (members != null && members.size() > 0) {
             View rootView = inflater.inflate(R.layout.listview_item, null);
+            rootView.setPadding(70, 70, 0, 0);
 
             TextView textViewName = (TextView) rootView.findViewById(R.id.textview_name);
+//            textViewName.setPadding(3, 0, 7, 0);
             TextView textViewState = (TextView) rootView.findViewById(R.id.textview_state);
+//            textViewState.setPadding(3, 0, 7, 0);
 
             textViewName.setText(getItem(position).getName());
             textViewState.setText(getItem(position).getState());
+
+            Typeface typeface = Typeface.createFromAsset(context.getAssets(), "optimale_bold.ttf");
+            textViewName.setTypeface(typeface);
+            textViewState.setTypeface(typeface);
 
             return rootView;
         } else {

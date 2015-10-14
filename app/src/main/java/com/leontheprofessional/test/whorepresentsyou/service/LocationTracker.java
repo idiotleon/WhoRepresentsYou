@@ -45,6 +45,10 @@ public class LocationTracker extends Service implements LocationListener {
         getLocation();
     }
 
+    public LocationTracker(){
+        mContext = getApplicationContext();
+    }
+
     public Location getLocation() {
         try {
             locationManager = (LocationManager) mContext
@@ -202,132 +206,4 @@ public class LocationTracker extends Service implements LocationListener {
     public IBinder onBind(Intent arg0) {
         return null;
     }
-
-
-    /*
-
-    public class LocationListener implements android.location.LocationListener {
-
-        private Location lastLocation;
-        private double latitude;
-        private double longitude;
-
-        public LocationListener(String provider) {
-            Log.v(LOG_TAG, "Location Listener Provider: " + provider);
-            lastLocation = new Location(provider);
-        }
-
-        @Override
-        public void onLocationChanged(Location location) {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
-            lastLocation.set(location);
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.v(LOG_TAG, "onStatusChanged: " + provider);
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            Log.v(LOG_TAG, "onProviderEnabled: " + provider);
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            Log.v(LOG_TAG, "onProviderDisabled: " + provider);
-        }
-    }
-
-    LocationListener[] locationListeners = new LocationListener[]{
-            new LocationListener(LocationManager.GPS_PROVIDER),
-            new LocationListener(LocationManager.NETWORK_PROVIDER)
-    };
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.v(LOG_TAG, "onStartCommand");
-        super.onStartCommand(intent, flags, startId);
-        return START_STICKY;
-    }
-
-    @Override
-    public void onCreate() {
-        Log.v(LOG_TAG, "onCreate()");
-        initializeLocationManager();
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for Activity#requestPermissions for more details.
-                    return;
-                }
-            }
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                    MIN_TIME_DURATION_FOR_LOCATION_UPDATES,
-                    MIN_DISTANCE_CHANGE_FOR_LOCATION_UPDATES,
-                    locationListeners[1]);
-        } catch (SecurityException ex) {
-            ex.printStackTrace();
-        } catch (IllegalArgumentException ex) {
-            ex.printStackTrace();
-        }
-
-        try {
-            locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    MIN_TIME_DURATION_FOR_LOCATION_UPDATES,
-                    MIN_DISTANCE_CHANGE_FOR_LOCATION_UPDATES,
-                    locationListeners[0]);
-        } catch (SecurityException ex) {
-            ex.printStackTrace();
-        } catch (IllegalArgumentException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.v(LOG_TAG, "onDestroy()");
-        if (locationManager != null) {
-            for (int i = 0; i < locationListeners.length; i++) {
-                try {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            // TODO: Consider calling
-                            //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
-                            // here to request the missing permissions, and then overriding
-                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                            //                                          int[] grantResults)
-                            // to handle the case where the user grants the permission. See the documentation
-                            // for Activity#requestPermissions for more details.
-                            return;
-                        }
-                    }
-                    locationManager.removeUpdates(locationListeners[i]);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private void initializeLocationManager() {
-        Log.v(LOG_TAG, "initializeLocationManager()");
-        if (locationManager == null)
-            locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-    }*/
 }

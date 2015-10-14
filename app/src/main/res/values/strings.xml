@@ -11,6 +11,9 @@
     <string name="btn_search_representative">Representative</string>
     <string name="btn_search_senator">Senator</string>
     <string name="insufficient_permission">Insufficient Permission</string>
+    <string name="autocomplete_textview_hint">Please type in firstname, or state code</string>
+    <string name="telephony_unavailable">Telelphone Capabilitiy Unavailable</string>
+    <string name="zipcode_not_known">Zipcode is not known.</string>
 
     <string-array name="state_code">
         <item>AL</item>
