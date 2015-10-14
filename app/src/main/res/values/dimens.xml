@@ -3,7 +3,16 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="text_size_listview_item">32sp</dimen>
+
+    <dimen name="text_size_listview_item">28sp</dimen>
+    <dimen name="text_size_detail_small">18sp</dimen>
+    <dimen name="text_size_detail_medium">24sp</dimen>
+    <dimen name="padding_detail">17dp</dimen>
+    <dimen name="padding_bottom_main_activity">21dp</dimen>
+    <dimen name="padding_bottom_list_item">7dp</dimen>
+    <dimen name="padding_autocomplete_edittext">14dp</dimen>
+
+    <dimen name="text_size_button">18sp</dimen>
     <dimen name="text_size_gridview_item">24sp</dimen>
     <dimen name="text_size_details_activity">24sp</dimen>
     <dimen name="favorite_start_width">46dp</dimen>
