@@ -25,7 +25,6 @@ public class CustomListFragmentAdapter extends BaseAdapter {
         this.members = members;
     }
 
-
     @Override
     public int getCount() {
         return members.size();

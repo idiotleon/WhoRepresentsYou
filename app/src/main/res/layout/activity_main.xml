@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
@@ -13,28 +13,47 @@
         android:layout_height="wrap_content" />
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/linearlayout_activity_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/autocomplete_textview"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_search_representative"
-            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/btn_search_representative"/>
+            android:layout_weight="1"
+            android:text="@string/btn_search_representative" />
 
         <Button
             android:id="@+id/btn_search_senator"
-            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/btn_search_senator"/>
+            android:layout_weight="1"
+            android:text="@string/btn_search_senator" />
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/container_main_activity"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearlayout_activity_main"></FrameLayout>
 
-</LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/myFAB"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="end|right|bottom"
+        android:paddingBottom="@dimen/floating_action_button_bottom_padding"
+        android:paddingRight="@dimen/floating_action_button_right_padding"
+        android:layout_marginBottom="@dimen/floating_action_button_bottom_margin"
+        android:layout_marginRight="@dimen/floating_action_button_right_margin"
+        android:src="@mipmap/gps_position_target"
+        app:elevation="4dp">
+
+    </android.support.design.widget.FloatingActionButton>
+
+</RelativeLayout>

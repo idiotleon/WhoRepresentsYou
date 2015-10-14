@@ -10,6 +10,7 @@
     <string name="imageview_gridview_item">Photo images of the member.</string>
     <string name="btn_search_representative">Representative</string>
     <string name="btn_search_senator">Senator</string>
+    <string name="insufficient_permission">Insufficient Permission</string>
 
     <string-array name="state_code">
         <item>AL</item>
