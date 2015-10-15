@@ -305,6 +305,10 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.action_show_favorite:
                 showFavorite();
+                return true;
+            case R.id.action_log_in:
+
+                return true;
             default:
                 return false;
         }
