@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">WhoRepresentsYou</string>
     <string name="action_search">Search</string>
-    <string name="search_hint">Please type in zipcode</string>
+    <string name="search_hint">Please type in zip code</string>
     <string name="empty_textview_text">Nothing to display</string>
 
     <string name="title_text_share">Share</string>
@@ -11,14 +11,17 @@
     <string name="btn_search_representative">Representative</string>
     <string name="btn_search_senator">Senator</string>
     <string name="insufficient_permission">Insufficient Permission</string>
-    <string name="autocomplete_textview_hint">Please type in firstname, or state code</string>
-    <string name="telephony_unavailable">Telelphone Capabilitiy Unavailable</string>
-    <string name="zipcode_not_known">Zipcode is not known.</string>
+    <string name="autocomplete_textview_hint">Please type in last name, or state code</string>
+    <string name="telephony_unavailable">Telephone Capability Unavailable</string>
+    <string name="zipcode_not_known">Zip code is not known.</string>
     <string name="action_show_favorite">ShowFavorites</string>
-    <string name="action_log_in">LogIn</string>
-    <string name="fail_in_picking_account">Failed in picking account</string>
+    <string name="action_log_in">Log in</string>
+    <string name="action_sign_up">Sign up</string>
+    <string name="text_username">Username</string>
+    <string name="text_password">password</string>
+    <string name="fail_in_picking_account">Failed in picking an account</string>
 
-    <string name="more_than_one_rows_deleted">More than one rows are deleted.</string>
+    <string name="more_than_one_rows_deleted">Morl;e than one rows are deleted.</string>
     <string name="please_input_a_keyword">Please input a keyword according to search hint.</string>
 
     <string name="preference_file_key">com.leontheprofessional.test.whorepresentsyou.sharedpreference</string>
@@ -97,4 +100,7 @@
     <string name="fragment_argument_identifier4">fragment_argument_identifier4</string>
     <string name="save_instance_state_main_activity">save_instance_state_main_activity</string>
     <string name="save_instance_state_details_activity">save_instance_state_details_activity</string>
+
+
+    <string name="google_client_id">207658950216-g4mshkf842dq22usps87kccl4q29h23v.apps.googleusercontent.com</string>
 </resources>

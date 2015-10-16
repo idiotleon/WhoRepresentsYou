@@ -31,6 +31,7 @@ import com.leontheprofessional.test.whorepresentsyou.activity.fragment.DisplayLi
 import com.leontheprofessional.test.whorepresentsyou.activity.fragment.adapter.CustomListFragmentAdapter;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
 import com.leontheprofessional.test.whorepresentsyou.jsonparsing.WhoRepresentsYouApi;
+import com.leontheprofessional.test.whorepresentsyou.login.LoginDialogFragment;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
 import com.leontheprofessional.test.whorepresentsyou.service.LocationTracker;
 
@@ -307,7 +308,8 @@ public class MainActivity extends AppCompatActivity {
                 showFavorite();
                 return true;
             case R.id.action_log_in:
-
+                LoginDialogFragment loginDialogFragment = new LoginDialogFragment();
+                loginDialogFragment.show(getFragmentManager(), "LoginDialogFragment");
                 return true;
             default:
                 return false;
