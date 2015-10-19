@@ -47,6 +47,20 @@
         <provider
             android:name="com.leontheprofessional.test.whorepresentsyou.provider.MemberContentProvider"
             android:authorities="com.leontheprofessional.test.whorepresentsyou.Provider" />
+
+        <receiver android:name=".appwidget.StackWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/stack_widget_provider" />
+        </receiver>
+
+        <service
+            android:name=".appwidget.service.StackWidgetService"
+            android:exported="true"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>

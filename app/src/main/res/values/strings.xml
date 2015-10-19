@@ -25,6 +25,8 @@
     <string name="please_input_a_keyword">Please input a keyword according to search hint.</string>
 
     <string name="preference_file_key">com.leontheprofessional.test.whorepresentsyou.sharedpreference</string>
+    <string name="no_favorite_member">No favorite member</string>
+    <string name="favorite_members">Favorite members</string>
 
     <string-array name="state_code">
         <item>AL</item>
