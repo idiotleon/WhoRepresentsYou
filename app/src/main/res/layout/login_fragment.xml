@@ -3,14 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/padding_detail"
+    android:minWidth="@dimen/min_width_login_fragment"
     android:orientation="vertical">
 
     <EditText
+        android:id="@+id/edittext_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/text_username" />
 
     <EditText
+        android:id="@+id/edittext_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/text_password"
@@ -21,12 +24,14 @@
         android:layout_height="wrap_content">
 
         <Button
+            android:id="@+id/login_confirm"
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:text="@string/action_log_in"
             android:layout_height="wrap_content" />
 
         <Button
+            android:id="@+id/login_signup"
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:text="@string/action_sign_up"

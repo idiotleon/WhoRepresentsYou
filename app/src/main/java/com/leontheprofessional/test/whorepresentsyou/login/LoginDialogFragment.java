@@ -4,7 +4,10 @@ import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -44,12 +49,43 @@ public class LoginDialogFragment extends DialogFragment {
     private final static String GPLUS_SCOPE = "https://www.googleapis.com/auth/plus.login";
     private final static String scopes = "oauth2:" + BOOKS_API_SCOPE + " " + GPLUS_SCOPE + " " + USER_INFO_SCOPE;
 
+    private EditText usernameEditText;
+    private EditText usernamePassword;
+    private Button btnConfirm;
+    private Button btnSignUp;
+    private ImageButton imageButton;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.login_fragment, null);
 
-        ImageButton imageButton = (ImageButton) rootView.findViewById(R.id.google_log_in_imagebutton);
+        usernameEditText = (EditText) rootView.findViewById(R.id.edittext_username);
+        usernamePassword = (EditText) rootView.findViewById(R.id.edittext_password);
+        btnConfirm = (Button) rootView.findViewById(R.id.login_confirm);
+        btnSignUp = (Button) rootView.findViewById(R.id.login_signup);
+        imageButton = (ImageButton) rootView.findViewById(R.id.google_log_in_imagebutton);
+
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                LoginDialogFragment.this.getDialog().dismiss();
+
+                RegistrationFragment registrationFragment = new RegistrationFragment();
+                registrationFragment.show(getFragmentManager(), "RegistrationFragment");
+/*                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.container_main_activity, registrationFragment);
+                fragmentTransaction.commit();*/
+            }
+        });
 
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override

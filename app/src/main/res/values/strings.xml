@@ -89,7 +89,6 @@
         <item>PW</item>
     </string-array>
 
-
     <string name="parcelable_identifier">parcelable_identifier</string>
     <string name="bundle_identifier">bundle_identifier</string>
     <string name="intent_identifier1">intent_identifier1</string>
@@ -100,7 +99,6 @@
     <string name="fragment_argument_identifier4">fragment_argument_identifier4</string>
     <string name="save_instance_state_main_activity">save_instance_state_main_activity</string>
     <string name="save_instance_state_details_activity">save_instance_state_details_activity</string>
-
 
     <string name="google_client_id">207658950216-g4mshkf842dq22usps87kccl4q29h23v.apps.googleusercontent.com</string>
 </resources>
