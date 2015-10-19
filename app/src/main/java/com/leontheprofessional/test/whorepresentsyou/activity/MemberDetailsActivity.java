@@ -51,6 +51,7 @@ public class MemberDetailsActivity extends AppCompatActivity {
             member = getIntent()
                     .getBundleExtra(getString(R.string.bundle_identifier))
                     .getParcelable(getString(R.string.parcelable_identifier));
+            Log.v(LOG_TAG, "member.getName(): " + member.getName());
         } else if (Intent.ACTION_SEARCH.equals(getIntent().getAction())) {
             String zipcode = getIntent().getStringExtra(SearchManager.QUERY);
             Log.v(LOG_TAG, "zipcode: " + zipcode);
