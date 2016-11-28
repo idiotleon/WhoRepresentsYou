@@ -1,4 +1,4 @@
-package com.leontheprofessional.test.whorepresentsyou.activity;
+package com.leontheprofessional.test.whorepresentsyou;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -25,7 +25,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.leontheprofessional.test.whorepresentsyou.R;
 import com.leontheprofessional.test.whorepresentsyou.activity.fragment.DisplayFragment;
 import com.leontheprofessional.test.whorepresentsyou.activity.fragment.DisplayListFragment;
 import com.leontheprofessional.test.whorepresentsyou.activity.fragment.adapter.CustomListFragmentAdapter;
@@ -101,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             representativeSearchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final String keyword = autoCompleteTextView.getText().toString();
+                    final String keyword = autoCompleteTextView.getText().toString().replaceAll("\\n", "").replaceAll("\\r", "").toUpperCase();
                     GeneralHelper.hideSoftKeyBoard(MainActivity.this, v);
                     if (keyword != null && keyword.length() > 0) {
                         new AsyncTask<Void, Void, Void>() {
@@ -135,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
             senatorSearchButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final String keyword = autoCompleteTextView.getText().toString();
+                    final String keyword = autoCompleteTextView.getText().toString().replaceAll("\\n", "").replaceAll("\\r", "").toUpperCase();
                     if (keyword == null || keyword.length() == 0) {
                         Toast.makeText(MainActivity.this, R.string.please_input_a_keyword, Toast.LENGTH_SHORT).show();
                     } else {

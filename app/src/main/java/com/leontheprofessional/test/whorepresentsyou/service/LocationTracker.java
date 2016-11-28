@@ -1,6 +1,7 @@
 package com.leontheprofessional.test.whorepresentsyou.service;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
@@ -14,12 +15,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.view.View;
+
+import com.leontheprofessional.test.whorepresentsyou.R;
+import com.leontheprofessional.test.whorepresentsyou.helper.GeneralConstant;
 
 /**
  * Created by Leon on 10/13/2015.
  */
-public class LocationTracker extends Service implements LocationListener {
+public class LocationTracker extends Service implements LocationListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String LOG_TAG = LocationTracker.class.getSimpleName();
 
@@ -34,6 +42,8 @@ public class LocationTracker extends Service implements LocationListener {
 
     boolean canGetLocation = false;
 
+    private View mLayout;
+
     Location location;
     double latitude;
     double longitude;
@@ -45,7 +55,7 @@ public class LocationTracker extends Service implements LocationListener {
         getLocation();
     }
 
-    public LocationTracker(){
+    public LocationTracker() {
         mContext = getApplicationContext();
     }
 
@@ -56,27 +66,63 @@ public class LocationTracker extends Service implements LocationListener {
 
             isGPSEnabled = locationManager
                     .isProviderEnabled(LocationManager.GPS_PROVIDER);
+            Log.v(LOG_TAG, "isGPSEnabled: " + isGPSEnabled);
 
             isNetworkEnabled = locationManager
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            Log.v(LOG_TAG, "isNetworkEnabled: " + isNetworkEnabled);
 
             if (!isGPSEnabled && !isNetworkEnabled) {
                 Log.e(LOG_TAG, "No network providers");
             } else {
                 this.canGetLocation = true;
                 if (isNetworkEnabled) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            // TODO: Consider calling
-                            //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
-                            // here to request the missing permissions, and then overriding
-                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                            //                                          int[] grantResults)
-                            // to handle the case where the user grants the permission. See the documentation
-                            // for Activity#requestPermissions for more details.
-                            return null;
+                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        Log.v(LOG_TAG, "Permission has been checked");
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, Manifest.permission.ACCESS_COARSE_LOCATION)
+                                || ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                            Log.v(LOG_TAG, "Displaying ACCESS_COARSE_LOCATION permission");
+                            Snackbar.make(mLayout, R.string.request_permission_coarse_location, Snackbar.LENGTH_INDEFINITE)
+                                    .setAction(R.string.ok, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ActivityCompat.requestPermissions((Activity) mContext,
+                                                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                                                    GeneralConstant.MY_PERMISSION_REQUST_ACCESS_COARSE_LOCATION);
+                                        }
+                                    })
+                                    .show();
+
+                            Log.v(LOG_TAG, "Displaying ACCESS_FINE_LOCATION permission");
+                            Snackbar.make(mLayout, R.string.request_permission_fine_location, Snackbar.LENGTH_INDEFINITE)
+                                    .setAction(R.string.ok, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ActivityCompat.requestPermissions((Activity) mContext,
+                                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                                    GeneralConstant.MY_PERMISSION_REQUST_ACCESS_FINE_LOCATION);
+                                        }
+                                    })
+                                    .show();
+                        } else {
+                            ActivityCompat.requestPermissions((Activity) mContext,
+                                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                                    GeneralConstant.MY_PERMISSION_REQUST_ACCESS_COARSE_LOCATION);
+
+                            ActivityCompat.requestPermissions((Activity) mContext,
+                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                    GeneralConstant.MY_PERMISSION_REQUST_ACCESS_FINE_LOCATION);
                         }
                     }
+                } else {
                     locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
                             MIN_TIME_DURATION_FOR_LOCATION_UPDATES,
@@ -87,7 +133,9 @@ public class LocationTracker extends Service implements LocationListener {
                                 .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                         if (location != null) {
                             latitude = location.getLatitude();
+                            Log.v(LOG_TAG, "latitude: " + latitude);
                             longitude = location.getLongitude();
+                            Log.v(LOG_TAG, "longitude: " + longitude);
                         }
                     }
                 }
@@ -104,7 +152,9 @@ public class LocationTracker extends Service implements LocationListener {
                                     .getLastKnownLocation(LocationManager.GPS_PROVIDER);
                             if (location != null) {
                                 latitude = location.getLatitude();
+                                Log.v(LOG_TAG, "latitude: " + latitude);
                                 longitude = location.getLongitude();
+                                Log.v(LOG_TAG, "longitude: " + longitude);
                             }
                         }
                     }
@@ -118,10 +168,11 @@ public class LocationTracker extends Service implements LocationListener {
         return location;
     }
 
+
     public void stopUsingGPS() {
         if (locationManager != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
                     // here to request the missing permissions, and then overriding
@@ -136,8 +187,8 @@ public class LocationTracker extends Service implements LocationListener {
         }
     }
 
-    public double getLatitude(){
-        if(location != null){
+    public double getLatitude() {
+        if (location != null) {
             latitude = location.getLatitude();
         }
 
@@ -145,8 +196,8 @@ public class LocationTracker extends Service implements LocationListener {
         return latitude;
     }
 
-    public double getLongitude(){
-        if(location != null){
+    public double getLongitude() {
+        if (location != null) {
             longitude = location.getLongitude();
         }
 
@@ -158,7 +209,7 @@ public class LocationTracker extends Service implements LocationListener {
         return this.canGetLocation;
     }
 
-    public void showSettingsAlert(){
+    public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
         // Setting Dialog Title
@@ -169,7 +220,7 @@ public class LocationTracker extends Service implements LocationListener {
 
         // On pressing Settings button
         alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog,int which) {
+            public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 mContext.startActivity(intent);
             }
@@ -205,5 +256,27 @@ public class LocationTracker extends Service implements LocationListener {
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == GeneralConstant.MY_PERMISSION_REQUST_ACCESS_COARSE_LOCATION) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            } else {
+                Log.v(LOG_TAG, "ACCESS_COARSE_LOCATION permission was not granted");
+
+            }
+        } else if (requestCode == GeneralConstant.MY_PERMISSION_REQUST_ACCESS_FINE_LOCATION) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            } else {
+                Log.v(LOG_TAG, "ACCESS_FINE_LOCATION permission was not granted");
+            }
+
+        } else {
+
+        }
     }
 }

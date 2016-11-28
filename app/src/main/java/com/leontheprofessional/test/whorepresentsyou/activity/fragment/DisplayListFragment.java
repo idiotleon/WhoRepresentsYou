@@ -5,10 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.leontheprofessional.test.whorepresentsyou.R;
-import com.leontheprofessional.test.whorepresentsyou.activity.MainActivity;
+import com.leontheprofessional.test.whorepresentsyou.MainActivity;
 import com.leontheprofessional.test.whorepresentsyou.activity.MemberDetailsActivity;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
 
