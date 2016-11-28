@@ -10,4 +10,7 @@ public class GeneralConstant {
     public static final boolean FAVORITE_STATUS_FALSE = false;
     public static final int FAVORITE_STATUS_FALSE_STATUS_CODE = 0;
     public static final int FAVORITE_STATUS_DEFAULT_STATUS_CODE = 0;
+
+    public static final int MY_PERMISSION_REQUST_ACCESS_COARSE_LOCATION = 0;
+    public static final int MY_PERMISSION_REQUST_ACCESS_FINE_LOCATION = 1;
 }

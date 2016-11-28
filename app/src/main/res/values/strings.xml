@@ -21,7 +21,7 @@
     <string name="text_password">password</string>
     <string name="fail_in_picking_account">Failed in picking an account</string>
 
-    <string name="more_than_one_rows_deleted">Morl;e than one rows are deleted.</string>
+    <string name="more_than_one_rows_deleted">More than one rows are deleted.</string>
     <string name="please_input_a_keyword">Please input a keyword according to search hint.</string>
 
     <string name="preference_file_key">com.leontheprofessional.test.whorepresentsyou.sharedpreference</string>
@@ -103,4 +103,9 @@
     <string name="save_instance_state_details_activity">save_instance_state_details_activity</string>
 
     <string name="google_client_id">207658950216-g4mshkf842dq22usps87kccl4q29h23v.apps.googleusercontent.com</string>
+
+    <string name="request_permission_fine_location">Access Fine Location permission is needed.</string>
+    <string name="request_permission_coarse_location">Access Coarse Location permission is needed.</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

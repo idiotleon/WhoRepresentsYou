@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.widget.RemoteViews;
 
 import com.leontheprofessional.test.whorepresentsyou.R;
-import com.leontheprofessional.test.whorepresentsyou.activity.MainActivity;
+import com.leontheprofessional.test.whorepresentsyou.MainActivity;
 import com.leontheprofessional.test.whorepresentsyou.activity.MemberDetailsActivity;
 import com.leontheprofessional.test.whorepresentsyou.appwidget.service.StackWidgetService;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
