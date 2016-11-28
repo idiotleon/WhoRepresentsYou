@@ -79,13 +79,6 @@ public class LocationTracker extends Service implements LocationListener, Activi
                 if (isNetworkEnabled) {
                     if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         Log.v(LOG_TAG, "Permission has been checked");
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
                         if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, Manifest.permission.ACCESS_COARSE_LOCATION)
                                 || ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, Manifest.permission.ACCESS_FINE_LOCATION)) {
 
@@ -121,26 +114,24 @@ public class LocationTracker extends Service implements LocationListener, Activi
                                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                     GeneralConstant.MY_PERMISSION_REQUST_ACCESS_FINE_LOCATION);
                         }
-                    }
-                } else {
-                    locationManager.requestLocationUpdates(
-                            LocationManager.NETWORK_PROVIDER,
-                            MIN_TIME_DURATION_FOR_LOCATION_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_LOCATION_UPDATES, this);
-                    Log.d(LOG_TAG, "Network");
-                    if (locationManager != null) {
-                        location = locationManager
-                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                        if (location != null) {
-                            latitude = location.getLatitude();
-                            Log.v(LOG_TAG, "latitude: " + latitude);
-                            longitude = location.getLongitude();
-                            Log.v(LOG_TAG, "longitude: " + longitude);
+                    } else {
+                        locationManager.requestLocationUpdates(
+                                LocationManager.NETWORK_PROVIDER,
+                                MIN_TIME_DURATION_FOR_LOCATION_UPDATES,
+                                MIN_DISTANCE_CHANGE_FOR_LOCATION_UPDATES, this);
+                        Log.d(LOG_TAG, "Network");
+                        if (locationManager != null) {
+                            location = locationManager
+                                    .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                            if (location != null) {
+                                latitude = location.getLatitude();
+                                Log.v(LOG_TAG, "latitude: " + latitude);
+                                longitude = location.getLongitude();
+                                Log.v(LOG_TAG, "longitude: " + longitude);
+                            }
                         }
                     }
-                }
-
-                if (isGPSEnabled) {
+                } else if (isGPSEnabled) {
                     if (location == null) {
                         locationManager.requestLocationUpdates(
                                 LocationManager.GPS_PROVIDER,
@@ -263,6 +254,8 @@ public class LocationTracker extends Service implements LocationListener, Activi
 
         if (requestCode == GeneralConstant.MY_PERMISSION_REQUST_ACCESS_COARSE_LOCATION) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.v(LOG_TAG, "ACCESS_COARSE_LOCATION permission was granted");
+
 
             } else {
                 Log.v(LOG_TAG, "ACCESS_COARSE_LOCATION permission was not granted");
@@ -270,13 +263,14 @@ public class LocationTracker extends Service implements LocationListener, Activi
             }
         } else if (requestCode == GeneralConstant.MY_PERMISSION_REQUST_ACCESS_FINE_LOCATION) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.v(LOG_TAG, "ACCESS_FINE_LOCATION permission was granted");
 
             } else {
                 Log.v(LOG_TAG, "ACCESS_FINE_LOCATION permission was not granted");
             }
 
         } else {
-
+            Log.e(LOG_TAG, "Permission was not granted.");
         }
     }
 }
