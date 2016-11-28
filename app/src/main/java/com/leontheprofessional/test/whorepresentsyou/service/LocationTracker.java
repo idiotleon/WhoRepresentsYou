@@ -55,6 +55,13 @@ public class LocationTracker extends Service implements LocationListener {
         getLocation();
     }
 
+    /**
+     * As a default constructor, it has to be kept.
+     */
+    public LocationTracker() {
+        this.mContext = getApplicationContext();
+    }
+
     public void getLocation() {
         try {
             locationManager = (LocationManager) mContext
