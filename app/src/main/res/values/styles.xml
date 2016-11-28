@@ -1,0 +1,15 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
+        <item name="colorAccent">@color/floating_action_button_color</item>
+        <item name="android:actionBarStyle">@style/CustomActionBar</item>
+        <item name="actionBarStyle">@style/CustomActionBar</item>
+    </style>
+
+    <!-- ActionBar Theme -->
+    <style name="CustomActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/action_bar_color</item>
+        <item name="background">@color/action_bar_color</item>
+    </style>
+</resources>

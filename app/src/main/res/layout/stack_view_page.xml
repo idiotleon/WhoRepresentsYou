@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/stackwidget_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/stackwidget_member_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="@dimen/padding_detail"
+        android:textSize="@dimen/text_size_listview_item" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/padding_detail"
+        android:paddingRight="@dimen/padding_detail">
+
+        <TextView
+            android:id="@+id/stackwidget_member_state"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="@dimen/padding_detail"
+            android:textSize="@dimen/text_size_listview_item" />
+
+        <TextView
+            android:id="@+id/stackwidget_member_district"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="@dimen/padding_detail"
+            android:textSize="@dimen/text_size_listview_item" />
+
+        <TextView
+            android:id="@+id/stackwidget_member_party"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:textSize="@dimen/text_size_listview_item" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/stackwidget_member_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|left"
+        android:paddingLeft="@dimen/padding_detail"
+        android:textSize="@dimen/text_size_listview_item" />
+
+    <TextView
+        android:id="@+id/stackwidget_office_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|left"
+        android:paddingLeft="@dimen/padding_detail"
+        android:textSize="@dimen/text_size_detail_medium" />
+
+    <TextView
+        android:id="@+id/stackwidget_member_webpage_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|left"
+        android:paddingLeft="@dimen/padding_detail"
+        android:textSize="@dimen/text_size_detail_small" />
+
+</LinearLayout>
