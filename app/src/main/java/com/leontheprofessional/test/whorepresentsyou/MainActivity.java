@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
@@ -12,7 +13,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -28,6 +31,7 @@ import android.widget.Toast;
 import com.leontheprofessional.test.whorepresentsyou.activity.fragment.DisplayFragment;
 import com.leontheprofessional.test.whorepresentsyou.activity.fragment.DisplayListFragment;
 import com.leontheprofessional.test.whorepresentsyou.activity.fragment.adapter.CustomListFragmentAdapter;
+import com.leontheprofessional.test.whorepresentsyou.helper.GeneralConstant;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
 import com.leontheprofessional.test.whorepresentsyou.jsonparsing.WhoRepresentsYouApi;
 import com.leontheprofessional.test.whorepresentsyou.login.LoginDialogFragment;
@@ -44,7 +48,7 @@ import java.util.Locale;
 
 import static com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper.isZipCode;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -57,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     private double latitude = 0.0;
     private double longitude = 0.0;
     private String zipCode;
+
+    private LocationTracker locationTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,66 +184,8 @@ public class MainActivity extends AppCompatActivity {
                                          Log.v(LOG_TAG, "FAB clicked");
                                          if (GeneralHelper.isNetworkConnectionAvailable(MainActivity.this)) {
 
-                                             LocationTracker locationTracker = new LocationTracker(MainActivity.this);
-                                             if (locationTracker.canGetLocation()) {
-                                                 latitude = locationTracker.getLatitude();
-                                                 Log.v(LOG_TAG, "latitude:  " + latitude);
-                                                 longitude = locationTracker.getLongitude();
-                                                 Log.v(LOG_TAG, "longitude:  " + longitude);
-                                             } else {
-                                                 locationTracker.showSettingsAlert();
-                                             }
-                                             locationTracker.stopUsingGPS();
+                                             locationTracker = new LocationTracker(MainActivity.this);
 
-                                             Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-                                             try {
-                                                 Log.v(LOG_TAG, "latitude, Geocoder:  " + latitude);
-                                                 Log.v(LOG_TAG, "longitude, Geocoder:  " + longitude);
-                                                 List<Address> addresses = geocoder.getFromLocation(latitude, longitude, ADDRESS_MAX_RESULT_NUMBER);
-                                                 if (addresses != null && addresses.size() > 0) {
-                                                     zipCode = addresses.get(0).getPostalCode();
-                                                     Log.v(LOG_TAG, "zipCode, Geocoder: " + zipCode);
-                                                     Log.v(LOG_TAG, "countryCode, Geocoder: " + addresses.get(0).getCountryCode());
-                                                     Log.v(LOG_TAG, "addressLine, Geocoder: " + addresses.get(0).getAddressLine(0));
-                                                     Log.v(LOG_TAG, "locality, Geocoder: " + addresses.get(0).getLocality());
-                                                     Log.v(LOG_TAG, "knownName, Geocoder: " + addresses.get(0).getFeatureName());
-                                                 } else {
-                                                     Log.e(LOG_TAG, "addresses is null");
-                                                 }
-
-                                                 if (zipCode != null && zipCode.length() > 0) {
-                                                     new AsyncTask<Void, Void, Void>() {
-                                                         @Override
-                                                         protected Void doInBackground(Void... params) {
-
-                                                             WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
-                                                             try {
-                                                                 members.clear();
-                                                                 members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipCode);
-                                                                 Log.v(LOG_TAG, "members: " + members.get(1).getName());
-                                                             } catch (JSONException e) {
-                                                                 e.printStackTrace();
-                                                             } catch (MalformedURLException e) {
-                                                                 e.printStackTrace();
-                                                             }
-
-                                                             return null;
-                                                         }
-
-                                                         @Override
-                                                         protected void onPostExecute(Void aVoid) {
-                                                             super.onPostExecute(aVoid);
-
-                                                             refreshListFragment(members);
-                                                         }
-                                                     }.execute();
-                                                 } else {
-                                                     Toast.makeText(MainActivity.this, R.string.zipcode_not_known, Toast.LENGTH_SHORT).show();
-                                                 }
-
-                                             } catch (IOException e) {
-                                                 e.printStackTrace();
-                                             }
                                          } else {
                                              Toast.makeText(MainActivity.this, getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
                                          }
@@ -366,6 +314,153 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             Toast.makeText(MainActivity.this, getString(R.string.network_unavailable), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.v(LOG_TAG, "onRequestPermissionsResult() executed!");
+
+        if (requestCode == GeneralConstant.MY_PERMISSION_REQUST_ACCESS_COARSE_LOCATION) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.v(LOG_TAG, "ACCESS_COARSE_LOCATION permission was granted");
+
+                locationTracker = new LocationTracker(MainActivity.this);
+                if (locationTracker.canGetLocation()) {
+                    latitude = locationTracker.getLatitude();
+                    Log.v(LOG_TAG, "latitude:  " + latitude);
+                    longitude = locationTracker.getLongitude();
+                    Log.v(LOG_TAG, "longitude:  " + longitude);
+                } else {
+                    locationTracker.showSettingsAlert();
+                }
+                locationTracker.stopUsingGPS();
+
+                Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                try {
+                    Log.v(LOG_TAG, "latitude, Geocoder:  " + latitude);
+                    Log.v(LOG_TAG, "longitude, Geocoder:  " + longitude);
+                    List<Address> addresses = geocoder.getFromLocation(latitude, longitude, ADDRESS_MAX_RESULT_NUMBER);
+                    if (addresses != null && addresses.size() > 0) {
+                        zipCode = addresses.get(0).getPostalCode();
+                        Log.v(LOG_TAG, "zipCode, Geocoder: " + zipCode);
+                        Log.v(LOG_TAG, "countryCode, Geocoder: " + addresses.get(0).getCountryCode());
+                        Log.v(LOG_TAG, "addressLine, Geocoder: " + addresses.get(0).getAddressLine(0));
+                        Log.v(LOG_TAG, "locality, Geocoder: " + addresses.get(0).getLocality());
+                        Log.v(LOG_TAG, "knownName, Geocoder: " + addresses.get(0).getFeatureName());
+                    } else {
+                        Log.e(LOG_TAG, "addresses is null");
+                    }
+
+                    if (zipCode != null && zipCode.length() > 0) {
+                        new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... params) {
+
+                                WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
+                                try {
+                                    members.clear();
+                                    members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipCode);
+                                    Log.v(LOG_TAG, "members: " + members.get(1).getName());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (MalformedURLException e) {
+                                    e.printStackTrace();
+                                }
+
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Void aVoid) {
+                                super.onPostExecute(aVoid);
+
+                                refreshListFragment(members);
+                            }
+                        }.execute();
+                    } else {
+                        Toast.makeText(MainActivity.this, R.string.zipcode_not_known, Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                Log.v(LOG_TAG, "ACCESS_COARSE_LOCATION permission was not granted");
+
+            }
+        } else if (requestCode == GeneralConstant.MY_PERMISSION_REQUST_ACCESS_FINE_LOCATION) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.v(LOG_TAG, "ACCESS_FINE_LOCATION permission was granted");
+
+                locationTracker = new LocationTracker(MainActivity.this);
+                if (locationTracker.canGetLocation()) {
+                    latitude = locationTracker.getLatitude();
+                    Log.v(LOG_TAG, "latitude:  " + latitude);
+                    longitude = locationTracker.getLongitude();
+                    Log.v(LOG_TAG, "longitude:  " + longitude);
+                } else {
+                    locationTracker.showSettingsAlert();
+                }
+                locationTracker.stopUsingGPS();
+
+                Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                try {
+                    Log.v(LOG_TAG, "latitude, Geocoder:  " + latitude);
+                    Log.v(LOG_TAG, "longitude, Geocoder:  " + longitude);
+                    List<Address> addresses = geocoder.getFromLocation(latitude, longitude, ADDRESS_MAX_RESULT_NUMBER);
+                    if (addresses != null && addresses.size() > 0) {
+                        zipCode = addresses.get(0).getPostalCode();
+                        Log.v(LOG_TAG, "zipCode, Geocoder: " + zipCode);
+                        Log.v(LOG_TAG, "countryCode, Geocoder: " + addresses.get(0).getCountryCode());
+                        Log.v(LOG_TAG, "addressLine, Geocoder: " + addresses.get(0).getAddressLine(0));
+                        Log.v(LOG_TAG, "locality, Geocoder: " + addresses.get(0).getLocality());
+                        Log.v(LOG_TAG, "knownName, Geocoder: " + addresses.get(0).getFeatureName());
+                    } else {
+                        Log.e(LOG_TAG, "addresses is null");
+                    }
+
+                    if (zipCode != null && zipCode.length() > 0) {
+                        new AsyncTask<Void, Void, Void>() {
+                            @Override
+                            protected Void doInBackground(Void... params) {
+
+                                WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
+                                try {
+                                    members.clear();
+                                    members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipCode);
+                                    Log.v(LOG_TAG, "members: " + members.get(1).getName());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (MalformedURLException e) {
+                                    e.printStackTrace();
+                                }
+
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Void aVoid) {
+                                super.onPostExecute(aVoid);
+
+                                refreshListFragment(members);
+                            }
+                        }.execute();
+                    } else {
+                        Toast.makeText(MainActivity.this, R.string.zipcode_not_known, Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Log.v(LOG_TAG, "ACCESS_FINE_LOCATION permission was not granted");
+            }
+
+        } else {
+            Log.e(LOG_TAG, "Permission was not granted.");
         }
     }
 }
