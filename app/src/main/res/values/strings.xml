@@ -93,7 +93,7 @@
 
     <string name="parcelable_identifier">parcelable_identifier</string>
     <string name="bundle_identifier">bundle_identifier</string>
-    <string name="intent_identifier1">intent_identifier1</string>
+    <string name="intent_identifier1">intent_identifier_1</string>
     <string name="search_keyword_identifier">search_keyword_identifier</string>
     <string name="fragment_argument_identifier">fragment_argument_identifier</string>
     <string name="fragment_argument_identifier2">fragment_argument_identifier2</string>

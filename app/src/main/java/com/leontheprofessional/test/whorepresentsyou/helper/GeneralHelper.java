@@ -49,6 +49,7 @@ public class GeneralHelper {
     }
 
     public static boolean isZipCode(String zipcode) {
+        Log.v(LOG_TAG, "Zip Code: " + zipcode);
         if (zipcode != null && zipcode.length() == 5) {
             if (zipcode.matches("[0-9]+"))
                 return true;
