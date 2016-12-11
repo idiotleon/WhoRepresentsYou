@@ -69,9 +69,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, GeneralConstant.MY_PERMISSION_REQUST_ACCESS_FINE_LOCATION);
-        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, GeneralConstant.MY_PERMISSION_REQUST_ACCESS_FINE_LOCATION);
-
         members = new ArrayList<>();
 
         if (savedInstanceState != null && savedInstanceState.containsKey(getString(R.string.save_instance_state_main_activity))) {
@@ -187,6 +184,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                      @Override
                                      public void onClick(View v) {
                                          Log.v(LOG_TAG, "FAB clicked");
+                                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, GeneralConstant.MY_PERMISSION_REQUST_ACCESS_FINE_LOCATION);
+                                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, GeneralConstant.MY_PERMISSION_REQUST_ACCESS_FINE_LOCATION);
+
                                          if (GeneralHelper.isNetworkConnectionAvailable(MainActivity.this)) {
 
                                              locationTracker = new LocationTracker(MainActivity.this);
