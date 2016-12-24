@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.leontheprofessional.test.whorepresentsyou.activity.fragment.DisplayFragment;
 import com.leontheprofessional.test.whorepresentsyou.activity.fragment.DisplayListFragment;
 import com.leontheprofessional.test.whorepresentsyou.activity.fragment.adapter.CustomListFragmentAdapter;
+import com.leontheprofessional.test.whorepresentsyou.google_analytics.GoogleTrackingApplication;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralConstant;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
 import com.leontheprofessional.test.whorepresentsyou.jsonparsing.WhoRepresentsYouApi;
@@ -68,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((GoogleTrackingApplication) getApplication()).startTracking();
 
         members = new ArrayList<>();
 
