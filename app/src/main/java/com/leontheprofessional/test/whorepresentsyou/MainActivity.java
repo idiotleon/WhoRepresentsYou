@@ -188,7 +188,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                      public void onClick(View v) {
                                          Log.v(LOG_TAG, "FAB clicked");
                                          ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, GeneralConstant.MY_PERMISSION_REQUST_ACCESS_FINE_LOCATION);
-                                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, GeneralConstant.MY_PERMISSION_REQUST_ACCESS_FINE_LOCATION);
 
                                          if (GeneralHelper.isNetworkConnectionAvailable(MainActivity.this)) {
 
