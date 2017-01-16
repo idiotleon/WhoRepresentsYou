@@ -31,7 +31,7 @@ import android.widget.Toast;
 import com.leontheprofessional.test.whorepresentsyou.activity.fragment.DisplayFragment;
 import com.leontheprofessional.test.whorepresentsyou.activity.fragment.DisplayListFragment;
 import com.leontheprofessional.test.whorepresentsyou.activity.fragment.adapter.CustomListFragmentAdapter;
-import com.leontheprofessional.test.whorepresentsyou.google_analytics.GoogleTrackingApplication;
+import com.leontheprofessional.test.whorepresentsyou.application.StethoApplication;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralConstant;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
 import com.leontheprofessional.test.whorepresentsyou.jsonparsing.WhoRepresentsYouApi;
@@ -46,7 +46,6 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.jar.Manifest;
 
 import static com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper.isZipCode;
 
@@ -70,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((GoogleTrackingApplication) getApplication()).startTracking();
+        // ((GoogleTrackingApplication) getApplication()).startTracking();
 
         members = new ArrayList<>();
 

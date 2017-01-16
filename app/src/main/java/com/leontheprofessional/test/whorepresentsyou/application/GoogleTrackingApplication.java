@@ -1,4 +1,4 @@
-package com.leontheprofessional.test.whorepresentsyou.google_analytics;
+package com.leontheprofessional.test.whorepresentsyou.application;
 
 import android.app.Application;
 import android.content.Context;
