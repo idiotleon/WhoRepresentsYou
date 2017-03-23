@@ -11,16 +11,16 @@
         android:id="@+id/autocomplete_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/padding_autocomplete_edittext"
-        android:hint="@string/autocomplete_textview_hint" />
+        android:hint="@string/autocomplete_textview_hint"
+        android:padding="@dimen/padding_autocomplete_edittext" />
 
     <LinearLayout
         android:id="@+id/linearlayout_activity_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/autocomplete_textview"
-        android:paddingBottom="@dimen/padding_bottom_main_activity"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/padding_bottom_main_activity">
 
         <Button
             android:id="@+id/btn_search_representative"
@@ -45,7 +45,7 @@
         android:id="@+id/container_main_activity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearlayout_activity_main"></FrameLayout>
+        android:layout_below="@+id/linearlayout_activity_main" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/myFAB"

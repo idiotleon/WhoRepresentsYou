@@ -1,7 +1,5 @@
 package com.leontheprofessional.test.whorepresentsyou;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +14,7 @@ import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -28,10 +27,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.leontheprofessional.test.whorepresentsyou.activity.fragment.DisplayFragment;
-import com.leontheprofessional.test.whorepresentsyou.activity.fragment.DisplayListFragment;
-import com.leontheprofessional.test.whorepresentsyou.activity.fragment.adapter.CustomListFragmentAdapter;
-import com.leontheprofessional.test.whorepresentsyou.application.StethoApplication;
+import com.leontheprofessional.test.whorepresentsyou.activity.fragments.DisplayFragment;
+import com.leontheprofessional.test.whorepresentsyou.activity.fragments.DisplayListFragment;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralConstant;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
 import com.leontheprofessional.test.whorepresentsyou.jsonparsing.WhoRepresentsYouApi;
@@ -218,16 +215,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private void refreshListFragment(ArrayList<MemberModel> members) {
         DisplayListFragment displayListFragment = new DisplayListFragment();
-        CustomListFragmentAdapter customListFragmentAdapter = new CustomListFragmentAdapter(MainActivity.this, members);
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(getString(R.string.fragment_argument_identifier3), members);
 
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container_main_activity, displayListFragment);
         displayListFragment.setArguments(bundle);
-        displayListFragment.setListAdapter(customListFragmentAdapter);
-        fragmentTransaction.commit();
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container_main_activity, displayListFragment)
+                .commit();
     }
 
     @Override
@@ -303,14 +299,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         if (GeneralHelper.isTablet(MainActivity.this)) {
                             Bundle arguments = new Bundle();
                             arguments.putParcelableArrayList(getString(R.string.fragment_argument_identifier), members);
-                            DisplayFragment displayFragment = new DisplayFragment();
-                            displayFragment.setArguments(arguments);
-                            FragmentManager fragmentManager = getFragmentManager();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            fragmentTransaction.replace(R.id.container1, displayFragment);
-                            fragmentTransaction.addToBackStack(null);
-
-                            fragmentTransaction.commit();
+                            DisplayListFragment displayListFragment = new DisplayListFragment();
+                            displayListFragment.setArguments(arguments);
+                            getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.container1, displayListFragment)
+                                    .addToBackStack(null)
+                                    .commit();
                         } else {
                             refreshListFragment(members);
                         }
