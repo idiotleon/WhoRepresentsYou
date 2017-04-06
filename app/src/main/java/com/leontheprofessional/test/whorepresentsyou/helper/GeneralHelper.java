@@ -91,11 +91,17 @@ public class GeneralHelper {
     }
 
     public static int getFavoriteStatus(Context context, MemberModel member) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        int favoriteStatusCode = sharedPreferences.getInt(member.getPhoneNumber().replace("-", ""),
-                GeneralConstant.FAVORITE_STATUS_DEFAULT_STATUS_CODE);
-        Log.v(LOG_TAG, "favoriteStatusCode: " + favoriteStatusCode);
-        return favoriteStatusCode;
+        if (member != null) {
+            SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            Log.i(LOG_TAG, "Member Phone Number: " + member.getPhoneNumber());
+            int favoriteStatusCode = sharedPreferences.getInt(member.getPhoneNumber().replace("-", ""),
+                    GeneralConstant.FAVORITE_STATUS_DEFAULT_STATUS_CODE);
+            Log.v(LOG_TAG, "favoriteStatusCode: " + favoriteStatusCode);
+            return favoriteStatusCode;
+        } else {
+            Log.i(LOG_TAG, "member is null");
+            return 0;
+        }
     }
 
     public static ArrayList<MemberModel> getAllFavoriteMembers(Context context) {

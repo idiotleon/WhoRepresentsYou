@@ -433,7 +433,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 try {
                                     members.clear();
                                     members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipCode);
-                                    Log.v(LOG_TAG, "members: " + members.get(1).getName());
+                                    Log.v(LOG_TAG, "members: " + members.get(0).getName());
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 } catch (MalformedURLException e) {

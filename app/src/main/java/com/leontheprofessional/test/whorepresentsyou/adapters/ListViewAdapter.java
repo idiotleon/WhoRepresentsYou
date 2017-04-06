@@ -1,6 +1,9 @@
 package com.leontheprofessional.test.whorepresentsyou.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
 import com.leontheprofessional.test.whorepresentsyou.R;
+import com.leontheprofessional.test.whorepresentsyou.activity.MemberDetailsActivity;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
 
 import java.util.ArrayList;
@@ -20,6 +24,7 @@ import java.util.ArrayList;
  */
 
 public class ListViewAdapter extends BaseSwipeAdapter {
+    private static final String TAG = ListViewAdapter.class.getSimpleName();
 
     private Context context;
     private ArrayList<MemberModel> members;
@@ -35,7 +40,7 @@ public class ListViewAdapter extends BaseSwipeAdapter {
     }
 
     @Override
-    public View generateView(int position, ViewGroup parent) {
+    public View generateView(final int position, ViewGroup parent) {
         View view = LayoutInflater.from(context).inflate(R.layout.listview_item_swipe, null);
         SwipeLayout swipeLayout = (SwipeLayout) view.findViewById(getSwipeLayoutResourceId(position));
         swipeLayout.addSwipeListener(new SimpleSwipeListener() {
@@ -46,6 +51,18 @@ public class ListViewAdapter extends BaseSwipeAdapter {
         });
 
         // todo: single click
+/*        swipeLayout.setItem(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent detailsIntent = new Intent(context, MemberDetailsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(context.getString(R.string.parcelable_identifier), members.get(position));
+                Log.i(TAG, members.get(position).getPhoneNumber());
+
+                detailsIntent.putExtra(context.getString(R.string.bundle_identifier), bundle);
+                context.startActivity(detailsIntent);
+            }
+        });*/
 
         // todo: double click
         swipeLayout.setOnDoubleClickListener(

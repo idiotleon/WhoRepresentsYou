@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,5 +20,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"></FrameLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/myFAB"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="end|right|bottom"
+        android:layout_marginBottom="@dimen/floating_action_button_bottom_margin"
+        android:layout_marginRight="@dimen/floating_action_button_right_margin"
+        android:paddingBottom="@dimen/floating_action_button_bottom_padding"
+        android:paddingRight="@dimen/floating_action_button_right_padding"
+        android:src="@mipmap/gps_position_target"
+        app:elevation="4dp">
+
+    </android.support.design.widget.FloatingActionButton>
 
 </LinearLayout>

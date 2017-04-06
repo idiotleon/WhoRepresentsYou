@@ -1,6 +1,7 @@
 package com.leontheprofessional.test.whorepresentsyou.activity.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import android.widget.ListView;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.leontheprofessional.test.whorepresentsyou.R;
+import com.leontheprofessional.test.whorepresentsyou.activity.MemberDetailsActivity;
 import com.leontheprofessional.test.whorepresentsyou.adapters.ListViewAdapter;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
 
@@ -38,7 +40,7 @@ public class DisplayListFragment extends Fragment implements LoaderManager.Loade
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.listview, null);
 
-        context = getContext();
+        context = getActivity();
         members = new ArrayList<>();
 
         listView = (ListView) view.findViewById(R.id.listview);
@@ -47,6 +49,19 @@ public class DisplayListFragment extends Fragment implements LoaderManager.Loade
 
         listView.setAdapter(listViewAdapter);
         listViewAdapter.setMode(com.daimajia.swipe.util.Attributes.Mode.Single);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent detailsIntent = new Intent(context, MemberDetailsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(context.getString(R.string.parcelable_identifier), members.get(position));
+                Log.i(TAG, members.get(position).getPhoneNumber());
+
+                detailsIntent.putExtra(context.getString(R.string.bundle_identifier), bundle);
+                context.startActivity(detailsIntent);
+            }
+        });
 
         return view;
     }
