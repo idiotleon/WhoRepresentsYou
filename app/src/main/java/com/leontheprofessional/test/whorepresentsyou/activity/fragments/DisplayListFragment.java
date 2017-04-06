@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.daimajia.swipe.SwipeLayout;
+import com.leontheprofessional.test.whorepresentsyou.MainActivity;
 import com.leontheprofessional.test.whorepresentsyou.R;
 import com.leontheprofessional.test.whorepresentsyou.activity.MemberDetailsActivity;
 import com.leontheprofessional.test.whorepresentsyou.adapters.ListViewAdapter;
@@ -59,6 +60,7 @@ public class DisplayListFragment extends Fragment implements LoaderManager.Loade
                 Log.i(TAG, members.get(position).getPhoneNumber());
 
                 detailsIntent.putExtra(context.getString(R.string.bundle_identifier), bundle);
+                detailsIntent.setAction(MainActivity.CUSTOM_SEARCH_INTENT_FILTER);
                 context.startActivity(detailsIntent);
             }
         });

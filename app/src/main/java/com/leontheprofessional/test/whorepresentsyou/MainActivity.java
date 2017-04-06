@@ -198,6 +198,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         );
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (members != null || members.size() != 0) {
+            refreshListFragment(members);
+        } else {
+            showFavorite();
+        }
+    }
+
     private void showFavorite() {
         try {
             new Thread(new Runnable() {
