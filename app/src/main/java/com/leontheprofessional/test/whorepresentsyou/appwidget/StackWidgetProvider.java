@@ -42,7 +42,6 @@ public class StackWidgetProvider extends AppWidgetProvider {
             Log.i(LOG_TAG, "position: " + position);
 
             membersArrayList = GeneralHelper.getAllFavoriteMembers(context);
-
             member = membersArrayList.get(position);
             Log.i(LOG_TAG, "member name: " + member.getName());
             Intent displayIntent = new Intent(context, MemberDetailsActivity.class);
@@ -59,10 +58,6 @@ public class StackWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-
-        for (int i = 0; i < appWidgetIds.length; i++) {
-            Log.i(LOG_TAG, "Contents of appWidgetIds: " + appWidgetIds[i]);
-        }
 
         for (int i = 0; i < appWidgetIds.length; i++) {
 
