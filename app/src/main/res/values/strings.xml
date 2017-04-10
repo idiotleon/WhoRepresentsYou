@@ -108,4 +108,12 @@
     <string name="request_permission_coarse_location">Access Coarse Location permission is needed.</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="cd_detail_fragment_icon_account">Account Icon</string>
+    <string name="cd_detail_fragment_phone_icon">Phone Icon</string>
+    <string name="cd_detail_fragment_office_icon">Office Icon</string>
+    <string name="cd_detail_fragment_icon_website">Website Icon</string>
+    <string name="cd_lv_item_swipe_delete">Icon Delete</string>
+    <string name="cd_login_icon">Icon Login</string>
+    <string name="cd_widget_icon">Widget Icon</string>
+    <string name="widget_deleted_confirmation">The AppWidget has been deleted</string>
 </resources>

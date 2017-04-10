@@ -29,7 +29,8 @@
             android:layout_height="match_parent"
             android:background="@drawable/red"
             android:padding="@dimen/activity_general_padding"
-            android:src="@android:drawable/ic_menu_delete" />
+            android:src="@android:drawable/ic_menu_delete"
+            android:contentDescription="@string/cd_lv_item_swipe_delete"/>
     </LinearLayout>
 
     <LinearLayout
