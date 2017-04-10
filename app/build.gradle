@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'key_who_represents_you'
+            keyPassword 'Dad@19630320'
+            storeFile file('$rootDir/key_store_who_represents_you.jks')
+            storePassword 'Dad@19630320'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "25"
-
     defaultConfig {
         applicationId "com.leontheprofessional.test.whorepresentsyou"
         minSdkVersion 14
@@ -16,6 +23,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
     dexOptions {
@@ -27,9 +35,8 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:25.2.0'
-
     compile 'com.android.support:design:25.2.0'
     compile 'com.google.android.gms:play-services-analytics:10.0.1'
     compile 'com.google.android.gms:play-services-auth:9.8.0'
@@ -38,6 +45,5 @@ dependencies {
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
     compile 'com.android.support:recyclerview-v7:25.2.0'
     compile 'com.android.support:support-v4:25.2.0'
-
     testCompile 'junit:junit:4.12'
 }

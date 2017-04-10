@@ -130,7 +130,7 @@ public class MemberContentProvider extends ContentProvider {
                 break;
         }
 
-        Log.v(LOG_TAG, "deleletedCount: " + deletedCount);
+        Log.v(LOG_TAG, "deletedCount: " + deletedCount);
         return deletedCount;
     }
 

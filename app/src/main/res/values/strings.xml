@@ -116,4 +116,10 @@
     <string name="cd_login_icon">Icon Login</string>
     <string name="cd_widget_icon">Widget Icon</string>
     <string name="widget_deleted_confirmation">The AppWidget has been deleted</string>
+    <string name="mark_as_favorite">Mark as favorite</string>
+    <string name="cancel_favorite">Favorite canceled</string>
+    <string name="deletion_confirmation">Deletion succeeded</string>
+    <string name="gps_is_setting">GPS is settings</string>
+    <string name="gps_setting_confirmation">GPS is not enabled. Do you want to go to settings menu?</string>
+    <string name="setting">Setting</string>
 </resources>

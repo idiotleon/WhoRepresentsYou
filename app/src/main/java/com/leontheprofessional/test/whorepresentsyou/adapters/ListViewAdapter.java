@@ -73,7 +73,6 @@ public class ListViewAdapter extends BaseSwipeAdapter {
 
                     @Override
                     public void onDoubleClick(SwipeLayout layout, boolean surface) {
-                        Toast.makeText(context, "DoubleClick", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -107,7 +106,7 @@ public class ListViewAdapter extends BaseSwipeAdapter {
                 GeneralHelper.cancelFavoriteStatus(context, memberClicked);
                 int deletedCount = GeneralHelper.deleteOneMember(context, memberClicked);
                 if (deletedCount == 1) {
-                    Toast.makeText(context, "Deletion clicked", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getString(R.string.deletion_confirmation), Toast.LENGTH_SHORT).show();
                 }
             }
         });
