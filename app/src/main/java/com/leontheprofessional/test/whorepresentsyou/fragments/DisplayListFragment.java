@@ -1,4 +1,4 @@
-package com.leontheprofessional.test.whorepresentsyou.activity.fragments;
+package com.leontheprofessional.test.whorepresentsyou.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.daimajia.swipe.SwipeLayout;
 import com.leontheprofessional.test.whorepresentsyou.MainActivity;
 import com.leontheprofessional.test.whorepresentsyou.R;
 import com.leontheprofessional.test.whorepresentsyou.activity.MemberDetailsActivity;

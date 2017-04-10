@@ -1,4 +1,4 @@
-package com.leontheprofessional.test.whorepresentsyou.activity.fragments.adapter;
+package com.leontheprofessional.test.whorepresentsyou.fragments.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

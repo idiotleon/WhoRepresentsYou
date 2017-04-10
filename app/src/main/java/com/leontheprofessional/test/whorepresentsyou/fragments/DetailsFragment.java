@@ -1,4 +1,4 @@
-package com.leontheprofessional.test.whorepresentsyou.activity.fragments;
+package com.leontheprofessional.test.whorepresentsyou.fragments;
 
 import android.Manifest;
 import android.support.v4.app.Fragment;

@@ -22,6 +22,7 @@ import com.leontheprofessional.test.whorepresentsyou.R;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
 import com.leontheprofessional.test.whorepresentsyou.provider.MemberContract;
 
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 
 /**
@@ -81,13 +82,7 @@ public class GeneralHelper {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         sharedPreferences.edit().putInt(key, GeneralConstant.FAVORITE_STATUS_FALSE_STATUS_CODE).commit();
 
-        Uri deletedUri = Uri.parse(MemberContract.MemberEntry.CONTENT_URI + "/" + member.getPhoneNumber());
-        Log.v(LOG_TAG, "deletedUri: " + deletedUri.toString());
-        int deletedCounts = context.getContentResolver().delete(deletedUri, null, null);
-        if (deletedCounts > 1) {
-            Log.w(LOG_TAG, context.getString(R.string.more_than_one_rows_deleted));
-        }
-        Log.v(LOG_TAG, "deletedCounts: " + deletedCounts);
+        deleteOneMember(context, member);
     }
 
     public static int getFavoriteStatus(Context context, MemberModel member) {
@@ -102,6 +97,18 @@ public class GeneralHelper {
             Log.i(LOG_TAG, "member is null");
             return 0;
         }
+    }
+
+    public static int deleteOneMember(Context context, MemberModel member) {
+        Uri deletedUri = Uri.parse(MemberContract.MemberEntry.CONTENT_URI + "/" + member.getPhoneNumber());
+        Log.i(LOG_TAG, "deletedUri: " + deletedUri);
+        Log.v(LOG_TAG, "deletedUri: " + deletedUri.toString());
+        int deletedCounts = context.getContentResolver().delete(deletedUri, null, null);
+        if (deletedCounts > 1) {
+            Log.w(LOG_TAG, context.getString(R.string.more_than_one_rows_deleted));
+        }
+        Log.v(LOG_TAG, "deletedCounts: " + deletedCounts);
+        return deletedCounts;
     }
 
     public static ArrayList<MemberModel> getAllFavoriteMembers(Context context) {

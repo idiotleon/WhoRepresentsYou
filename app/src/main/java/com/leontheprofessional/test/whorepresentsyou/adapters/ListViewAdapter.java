@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +16,8 @@ import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
 import com.leontheprofessional.test.whorepresentsyou.R;
 import com.leontheprofessional.test.whorepresentsyou.activity.MemberDetailsActivity;
+import com.leontheprofessional.test.whorepresentsyou.helper.GeneralConstant;
+import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
 
 import java.util.ArrayList;
@@ -76,13 +79,36 @@ public class ListViewAdapter extends BaseSwipeAdapter {
         );
 
         // todo: favorite
+        final MemberModel memberClicked = members.get(position);
+        final CheckBox checkBox = (CheckBox) view.findViewById(R.id.cb_star);
+        if (GeneralHelper.getFavoriteStatus(context, memberClicked) == GeneralConstant.FAVORITE_STATUS_FALSE_STATUS_CODE) {
+            checkBox.setChecked(false);
+        } else {
+            checkBox.setChecked(true);
+        }
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkBox.isChecked()) {
+                    checkBox.setChecked(false);
+                    GeneralHelper.cancelFavoriteStatus(context, memberClicked);
+                } else {
+                    checkBox.setChecked(true);
+                    GeneralHelper.markAsFavorite(context, memberClicked);
+                }
+            }
+        });
 
         // todo: deletion
         view.findViewById(R.id.iv_trash).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Deletion clicked", Toast.LENGTH_SHORT).show();
+                GeneralHelper.cancelFavoriteStatus(context, memberClicked);
+                int deletedCount = GeneralHelper.deleteOneMember(context, memberClicked);
+                if (deletedCount == 1) {
+                    Toast.makeText(context, "Deletion clicked", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

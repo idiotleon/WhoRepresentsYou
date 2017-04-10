@@ -1,4 +1,4 @@
-package com.leontheprofessional.test.whorepresentsyou.activity.fragments;
+package com.leontheprofessional.test.whorepresentsyou.fragments;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,7 +14,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.leontheprofessional.test.whorepresentsyou.R;
-import com.leontheprofessional.test.whorepresentsyou.activity.fragments.adapter.CustomGridViewAdapter;
+import com.leontheprofessional.test.whorepresentsyou.fragments.adapter.CustomGridViewAdapter;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
 
 import java.util.ArrayList;
