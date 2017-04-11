@@ -3,20 +3,25 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         config {
-            keyAlias 'key_who_represents_you'
+            keyAlias 'who_represents_you'
             keyPassword 'Dad@19630320'
-            storeFile file('$rootDir/key_store_who_represents_you.jks')
+            storeFile file('D:/Projects/Android/WhoRepresentsYou/key_store_who_represents_you.jks')
             storePassword 'Dad@19630320'
         }
     }
+
+    configurations {
+        all*.exclude module: 'zzf'
+    }
+
     compileSdkVersion 25
     buildToolsVersion "25"
     defaultConfig {
         applicationId "com.leontheprofessional.test.whorepresentsyou"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 8
-        versionName "1.7"
+        versionCode 9
+        versionName "1.8"
         multiDexEnabled = true
     }
     buildTypes {
@@ -38,7 +43,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.android.support:design:25.2.0'
-    compile 'com.google.android.gms:play-services-analytics:10.0.1'
+    compile 'com.google.android.gms:play-services-analytics:9.8.0'
     compile 'com.google.android.gms:play-services-auth:9.8.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.facebook.stetho:stetho:1.1.1'

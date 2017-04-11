@@ -1,4 +1,4 @@
-package com.leontheprofessional.test.whorepresentsyou;
+package com.leontheprofessional.test.whorepresentsyou.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -26,6 +26,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.leontheprofessional.test.whorepresentsyou.R;
 import com.leontheprofessional.test.whorepresentsyou.application.GoogleTrackingApplication;
 import com.leontheprofessional.test.whorepresentsyou.fragments.DisplayListFragment;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralConstant;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((GoogleTrackingApplication) getApplication()).startTracking();
+        // ((GoogleTrackingApplication) getApplication()).startTracking();
 
         members = new ArrayList<>();
 
@@ -214,8 +215,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 @Override
                 public void run() {
                     members.clear();
-                    members = GeneralHelper.getAllFavoriteMembers(MainActivity.this);
-                    refreshListFragment(members);
+                    // members = GeneralHelper.getAllFavoriteMembers(MainActivity.this);
+                    refreshListFragment(GeneralHelper.getAllFavoriteMembers(MainActivity.this));
                 }
             }).run();
         } catch (Exception ex) {
@@ -313,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                             displayListFragment.setArguments(arguments);
                             getSupportFragmentManager()
                                     .beginTransaction()
-                                    .replace(R.id.container1, displayListFragment)
+                                    .replace(R.id.container_main_activity, displayListFragment)
                                     .addToBackStack(null)
                                     .commit();
                         } else {
@@ -337,135 +338,138 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         if (requestCode == GeneralConstant.MY_PERMISSION_REQUST_ACCESS_COARSE_LOCATION) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.v(LOG_TAG, "ACCESS_COARSE_LOCATION permission was granted");
-
-                locationTracker = new LocationTracker(MainActivity.this);
-                if (locationTracker.canGetLocation()) {
-                    latitude = locationTracker.getLatitude();
-                    Log.v(LOG_TAG, "latitude:  " + latitude);
-                    longitude = locationTracker.getLongitude();
-                    Log.v(LOG_TAG, "longitude:  " + longitude);
-                } else {
-                    locationTracker.showSettingsAlert();
-                }
-                locationTracker.stopUsingGPS();
-
-                Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-                try {
-                    Log.v(LOG_TAG, "latitude, Geocoder:  " + latitude);
-                    Log.v(LOG_TAG, "longitude, Geocoder:  " + longitude);
-                    List<Address> addresses = geocoder.getFromLocation(latitude, longitude, ADDRESS_MAX_RESULT_NUMBER);
-                    if (addresses != null && addresses.size() > 0) {
-                        zipCode = addresses.get(0).getPostalCode();
-                        Log.v(LOG_TAG, "zipCode, Geocoder: " + zipCode);
-                        Log.v(LOG_TAG, "countryCode, Geocoder: " + addresses.get(0).getCountryCode());
-                        Log.v(LOG_TAG, "addressLine, Geocoder: " + addresses.get(0).getAddressLine(0));
-                        Log.v(LOG_TAG, "locality, Geocoder: " + addresses.get(0).getLocality());
-                        Log.v(LOG_TAG, "knownName, Geocoder: " + addresses.get(0).getFeatureName());
+                if (GeneralHelper.isNetworkConnectionAvailable(MainActivity.this)) {
+                    locationTracker = new LocationTracker(MainActivity.this);
+                    if (locationTracker.canGetLocation()) {
+                        latitude = locationTracker.getLatitude();
+                        Log.v(LOG_TAG, "latitude:  " + latitude);
+                        longitude = locationTracker.getLongitude();
+                        Log.v(LOG_TAG, "longitude:  " + longitude);
                     } else {
-                        Log.e(LOG_TAG, "addresses is null");
+                        locationTracker.showSettingsAlert();
                     }
+                    locationTracker.stopUsingGPS();
 
-                    if (zipCode != null && zipCode.length() > 0) {
-                        new AsyncTask<Void, Void, Void>() {
-                            @Override
-                            protected Void doInBackground(Void... params) {
+                    Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                    try {
+                        Log.v(LOG_TAG, "latitude, Geocoder:  " + latitude);
+                        Log.v(LOG_TAG, "longitude, Geocoder:  " + longitude);
+                        List<Address> addresses = geocoder.getFromLocation(latitude, longitude, ADDRESS_MAX_RESULT_NUMBER);
+                        if (addresses != null && addresses.size() > 0) {
+                            zipCode = addresses.get(0).getPostalCode();
+                            Log.v(LOG_TAG, "zipCode, Geocoder: " + zipCode);
+                            Log.v(LOG_TAG, "countryCode, Geocoder: " + addresses.get(0).getCountryCode());
+                            Log.v(LOG_TAG, "addressLine, Geocoder: " + addresses.get(0).getAddressLine(0));
+                            Log.v(LOG_TAG, "locality, Geocoder: " + addresses.get(0).getLocality());
+                            Log.v(LOG_TAG, "knownName, Geocoder: " + addresses.get(0).getFeatureName());
+                        } else {
+                            Log.e(LOG_TAG, "addresses is null");
+                        }
 
-                                WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
-                                try {
-                                    members.clear();
-                                    members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipCode);
-                                    Log.v(LOG_TAG, "members: " + members.get(1).getName());
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (MalformedURLException e) {
-                                    e.printStackTrace();
+                        if (zipCode != null && zipCode.length() > 0) {
+                            new AsyncTask<Void, Void, Void>() {
+                                @Override
+                                protected Void doInBackground(Void... params) {
+
+                                    WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
+                                    try {
+                                        members.clear();
+                                        members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipCode);
+                                        Log.v(LOG_TAG, "members: " + members.get(1).getName());
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    } catch (MalformedURLException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    return null;
                                 }
 
-                                return null;
-                            }
+                                @Override
+                                protected void onPostExecute(Void aVoid) {
+                                    super.onPostExecute(aVoid);
 
-                            @Override
-                            protected void onPostExecute(Void aVoid) {
-                                super.onPostExecute(aVoid);
-
-                                refreshListFragment(members);
-                            }
-                        }.execute();
-                    } else {
-                        Toast.makeText(MainActivity.this, R.string.zipcode_not_known, Toast.LENGTH_SHORT).show();
+                                    refreshListFragment(members);
+                                }
+                            }.execute();
+                        } else {
+                            Toast.makeText(MainActivity.this, R.string.zipcode_not_known, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } else {
+                    Toast.makeText(MainActivity.this, getString(R.string.network_unavailable), Toast.LENGTH_LONG).show();
                 }
-
             } else {
                 Log.v(LOG_TAG, "ACCESS_COARSE_LOCATION permission was not granted");
-
             }
         } else if (requestCode == GeneralConstant.MY_PERMISSION_REQUST_ACCESS_FINE_LOCATION) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.v(LOG_TAG, "ACCESS_FINE_LOCATION permission was granted");
-
-                locationTracker = new LocationTracker(MainActivity.this);
-                if (locationTracker.canGetLocation()) {
-                    latitude = locationTracker.getLatitude();
-                    Log.v(LOG_TAG, "latitude:  " + latitude);
-                    longitude = locationTracker.getLongitude();
-                    Log.v(LOG_TAG, "longitude:  " + longitude);
-                } else {
-                    locationTracker.showSettingsAlert();
-                }
-                locationTracker.stopUsingGPS();
-
-                Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-                try {
-                    Log.v(LOG_TAG, "latitude, Geocoder:  " + latitude);
-                    Log.v(LOG_TAG, "longitude, Geocoder:  " + longitude);
-                    List<Address> addresses = geocoder.getFromLocation(latitude, longitude, ADDRESS_MAX_RESULT_NUMBER);
-                    if (addresses != null && addresses.size() > 0) {
-                        zipCode = addresses.get(0).getPostalCode();
-                        Log.v(LOG_TAG, "zipCode, Geocoder: " + zipCode);
-                        Log.v(LOG_TAG, "countryCode, Geocoder: " + addresses.get(0).getCountryCode());
-                        Log.v(LOG_TAG, "addressLine, Geocoder: " + addresses.get(0).getAddressLine(0));
-                        Log.v(LOG_TAG, "locality, Geocoder: " + addresses.get(0).getLocality());
-                        Log.v(LOG_TAG, "knownName, Geocoder: " + addresses.get(0).getFeatureName());
+                if (GeneralHelper.isNetworkConnectionAvailable(MainActivity.this)) {
+                    locationTracker = new LocationTracker(MainActivity.this);
+                    if (locationTracker.canGetLocation()) {
+                        latitude = locationTracker.getLatitude();
+                        Log.v(LOG_TAG, "latitude:  " + latitude);
+                        longitude = locationTracker.getLongitude();
+                        Log.v(LOG_TAG, "longitude:  " + longitude);
                     } else {
-                        Log.e(LOG_TAG, "addresses is null");
+                        locationTracker.showSettingsAlert();
                     }
+                    locationTracker.stopUsingGPS();
 
-                    if (zipCode != null && zipCode.length() > 0) {
-                        new AsyncTask<Void, Void, Void>() {
-                            @Override
-                            protected Void doInBackground(Void... params) {
+                    Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                    try {
+                        Log.v(LOG_TAG, "latitude, Geocoder:  " + latitude);
+                        Log.v(LOG_TAG, "longitude, Geocoder:  " + longitude);
+                        List<Address> addresses = geocoder.getFromLocation(latitude, longitude, ADDRESS_MAX_RESULT_NUMBER);
+                        if (addresses != null && addresses.size() > 0) {
+                            zipCode = addresses.get(0).getPostalCode();
+                            Log.v(LOG_TAG, "zipCode, Geocoder: " + zipCode);
+                            Log.v(LOG_TAG, "countryCode, Geocoder: " + addresses.get(0).getCountryCode());
+                            Log.v(LOG_TAG, "addressLine, Geocoder: " + addresses.get(0).getAddressLine(0));
+                            Log.v(LOG_TAG, "locality, Geocoder: " + addresses.get(0).getLocality());
+                            Log.v(LOG_TAG, "knownName, Geocoder: " + addresses.get(0).getFeatureName());
+                        } else {
+                            Log.e(LOG_TAG, "addresses is null");
+                        }
 
-                                WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
-                                try {
-                                    members.clear();
-                                    members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipCode);
-                                    Log.v(LOG_TAG, "members: " + members.get(0).getName());
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (MalformedURLException e) {
-                                    e.printStackTrace();
+                        if (zipCode != null && zipCode.length() > 0) {
+                            new AsyncTask<Void, Void, Void>() {
+                                @Override
+                                protected Void doInBackground(Void... params) {
+
+                                    WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
+                                    try {
+                                        members.clear();
+                                        members = whoRepresentsYouApi.getAllMemberByZipCode(MainActivity.this, zipCode);
+                                        Log.v(LOG_TAG, "members: " + members.get(0).getName());
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    } catch (MalformedURLException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    return null;
                                 }
 
-                                return null;
-                            }
+                                @Override
+                                protected void onPostExecute(Void aVoid) {
+                                    super.onPostExecute(aVoid);
 
-                            @Override
-                            protected void onPostExecute(Void aVoid) {
-                                super.onPostExecute(aVoid);
+                                    refreshListFragment(members);
+                                }
+                            }.execute();
+                        } else {
+                            Toast.makeText(MainActivity.this, R.string.zipcode_not_known, Toast.LENGTH_SHORT).show();
+                        }
 
-                                refreshListFragment(members);
-                            }
-                        }.execute();
-                    } else {
-                        Toast.makeText(MainActivity.this, R.string.zipcode_not_known, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } else {
+                    Toast.makeText(MainActivity.this, getString(R.string.network_unavailable), Toast.LENGTH_LONG).show();
                 }
             } else {
                 Log.v(LOG_TAG, "ACCESS_FINE_LOCATION permission was not granted");

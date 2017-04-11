@@ -8,18 +8,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.leontheprofessional.test.whorepresentsyou.R;
-import com.leontheprofessional.test.whorepresentsyou.MainActivity;
+import com.leontheprofessional.test.whorepresentsyou.activity.MainActivity;
 import com.leontheprofessional.test.whorepresentsyou.activity.MemberDetailsActivity;
 import com.leontheprofessional.test.whorepresentsyou.appwidget.service.StackWidgetService;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
 
-import java.lang.reflect.Member;
 import java.util.ArrayList;
 
 /**

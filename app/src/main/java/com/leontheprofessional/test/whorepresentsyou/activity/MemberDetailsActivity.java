@@ -21,7 +21,6 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.leontheprofessional.test.whorepresentsyou.MainActivity;
 import com.leontheprofessional.test.whorepresentsyou.R;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralConstant;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
