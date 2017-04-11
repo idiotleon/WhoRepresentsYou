@@ -152,6 +152,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 WhoRepresentsYouApi whoRepresentsYouApi = new WhoRepresentsYouApi();
                                 try {
                                     members.clear();
+                                    // todo: save all members searched instead of saving only favorite members
+                                    // todo: favorite members will displayed on the top part of the list
                                     members = whoRepresentsYouApi.searchSenators(MainActivity.this, keyword);
                                 } catch (MalformedURLException e) {
                                     e.printStackTrace();
