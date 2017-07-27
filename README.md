@@ -6,4 +6,4 @@ Users can look up their representatives and senators by zip code, first name, or
 Users can mark any representative and senator as favorite for easier and quicker access
 
 Screenshots:
-![main screen shot]https://lh3.googleusercontent.com/yGhNoZwnH1NsdN5J5KjbqVt7beOr8JvcgL9JrevqwILtbLDG86y9u2zZlemOY7qrp8u2=h900-rw
+![alt text] (https://lh3.googleusercontent.com/yGhNoZwnH1NsdN5J5KjbqVt7beOr8JvcgL9JrevqwILtbLDG86y9u2zZlemOY7qrp8u2=h900-rw "main screen shot")
