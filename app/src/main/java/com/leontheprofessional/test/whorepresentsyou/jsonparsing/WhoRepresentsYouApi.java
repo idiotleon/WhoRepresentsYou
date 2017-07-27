@@ -67,7 +67,6 @@ public class WhoRepresentsYouApi {
         }
     }
 
-
     private ArrayList<MemberModel> getSenatorsByName(Context context, String keyword) throws MalformedURLException, JSONException {
         String urlString = BASE_URL_SENATOR_BY_NAME + NAME_OPTION + keyword + JSON_OPTION;
         Log.v(LOG_TAG, "urlString, getSenatorsByName: " + urlString);

@@ -23,4 +23,5 @@
     <dimen name="floating_action_button_right_margin">14dp</dimen>
 
     <dimen name="min_width_login_fragment">277dp</dimen>
+    <dimen name="activity_general_padding">25dp</dimen>
 </resources>

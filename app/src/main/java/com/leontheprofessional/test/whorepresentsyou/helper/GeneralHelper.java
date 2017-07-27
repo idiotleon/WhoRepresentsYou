@@ -22,6 +22,7 @@ import com.leontheprofessional.test.whorepresentsyou.R;
 import com.leontheprofessional.test.whorepresentsyou.model.MemberModel;
 import com.leontheprofessional.test.whorepresentsyou.provider.MemberContract;
 
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 
 /**
@@ -81,21 +82,33 @@ public class GeneralHelper {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         sharedPreferences.edit().putInt(key, GeneralConstant.FAVORITE_STATUS_FALSE_STATUS_CODE).commit();
 
+        deleteOneMember(context, member);
+    }
+
+    public static int getFavoriteStatus(Context context, MemberModel member) {
+        if (member != null) {
+            SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            Log.i(LOG_TAG, "Member Phone Number: " + member.getPhoneNumber());
+            int favoriteStatusCode = sharedPreferences.getInt(member.getPhoneNumber().replace("-", ""),
+                    GeneralConstant.FAVORITE_STATUS_DEFAULT_STATUS_CODE);
+            Log.v(LOG_TAG, "favoriteStatusCode: " + favoriteStatusCode);
+            return favoriteStatusCode;
+        } else {
+            Log.i(LOG_TAG, "member is null");
+            return 0;
+        }
+    }
+
+    public static int deleteOneMember(Context context, MemberModel member) {
         Uri deletedUri = Uri.parse(MemberContract.MemberEntry.CONTENT_URI + "/" + member.getPhoneNumber());
+        Log.i(LOG_TAG, "deletedUri: " + deletedUri);
         Log.v(LOG_TAG, "deletedUri: " + deletedUri.toString());
         int deletedCounts = context.getContentResolver().delete(deletedUri, null, null);
         if (deletedCounts > 1) {
             Log.w(LOG_TAG, context.getString(R.string.more_than_one_rows_deleted));
         }
         Log.v(LOG_TAG, "deletedCounts: " + deletedCounts);
-    }
-
-    public static int getFavoriteStatus(Context context, MemberModel member) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        int favoriteStatusCode = sharedPreferences.getInt(member.getPhoneNumber().replace("-", ""),
-                GeneralConstant.FAVORITE_STATUS_DEFAULT_STATUS_CODE);
-        Log.v(LOG_TAG, "favoriteStatusCode: " + favoriteStatusCode);
-        return favoriteStatusCode;
+        return deletedCounts;
     }
 
     public static ArrayList<MemberModel> getAllFavoriteMembers(Context context) {

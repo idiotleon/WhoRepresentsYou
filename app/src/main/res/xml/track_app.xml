@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ga_trackingId">UA-89247350-2</string>
+    <bool name="ga_autoActivityTracking">true</bool>
+    <screenName name="com.leontheprofessional.whorepresentsyou.MainActivity">
+        Main Activity
+    </screenName>
+    <screenName name="com.leontheprofessional.whorepresentsyou.MemberDetailsActivity">
+        Member Details Activity
+    </screenName>
+</resources>

@@ -23,6 +23,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="center_vertical"
+                android:contentDescription="@string/cd_widget_icon"
                 android:src="@mipmap/uncle_sam" />
 
             <LinearLayout
@@ -33,8 +34,8 @@
                 android:orientation="vertical"
                 android:paddingBottom="4dp"
                 android:paddingEnd="4dp"
-                android:paddingRight="4dp"
                 android:paddingLeft="8dp"
+                android:paddingRight="4dp"
                 android:paddingStart="8dp">
 
                 <TextView

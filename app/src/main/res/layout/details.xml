@@ -14,7 +14,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:src="@mipmap/icon_name" />
+            android:src="@mipmap/icon_name"
+            android:contentDescription="@string/cd_detail_fragment_icon_account"/>
 
         <TextView
             android:id="@+id/textview_detail_name"
@@ -80,7 +81,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@mipmap/icon_phone" />
+            android:src="@mipmap/icon_phone"
+            android:contentDescription="@string/cd_detail_fragment_phone_icon"/>
 
         <TextView
             android:id="@+id/textview_detail_phone"
@@ -102,7 +104,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@mipmap/icon_office" />
+            android:src="@mipmap/icon_office"
+            android:contentDescription="@string/cd_detail_fragment_office_icon"/>
 
         <TextView
             android:id="@+id/textview_detail_office"
@@ -124,7 +127,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@mipmap/icon_web" />
+            android:src="@mipmap/icon_web"
+            android:contentDescription="@string/cd_detail_fragment_icon_website"/>
 
         <TextView
             android:id="@+id/textview_detail_link"

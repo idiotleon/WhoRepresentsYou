@@ -19,7 +19,7 @@ import java.util.ArrayList;
  */
 public class StackWidgetService extends RemoteViewsService {
 
-    public static final String INTENT_EXTRAS_MEMBER_IDENTIFIER = "intentExtrasMember";
+    public static final String INTENT_EXTRA_POSITION_IDENTIFIER = "intent_extras_position";
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -39,6 +39,7 @@ public class StackWidgetService extends RemoteViewsService {
             this.context = context;
             appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
+            Log.i(LOG_TAG, "appWidgetId: " + appWidgetId);
         }
 
         @Override
@@ -69,7 +70,7 @@ public class StackWidgetService extends RemoteViewsService {
                 MemberModel member = membersArrayList.get(position);
 
                 String name = member.getName();
-                Log.v(LOG_TAG, "memberName: " + name);
+                Log.v(LOG_TAG, "Member Name: " + name);
                 remoteViews.setTextViewText(R.id.stackwidget_member_name, name);
                 String state = member.getState();
                 remoteViews.setTextViewText(R.id.stackwidget_member_state, state);
@@ -85,10 +86,10 @@ public class StackWidgetService extends RemoteViewsService {
                 remoteViews.setTextViewText(R.id.stackwidget_member_webpage_link, webPageLink);
 
                 Bundle extras = new Bundle();
-                extras.putParcelable(INTENT_EXTRAS_MEMBER_IDENTIFIER, member);
-                Intent fillIntent = new Intent();
-                fillIntent.putExtras(extras);
-                remoteViews.setOnClickFillInIntent(R.id.stackwidget_view, fillIntent);
+                extras.putInt(INTENT_EXTRA_POSITION_IDENTIFIER, position);
+                Intent fillInIntent = new Intent();
+                fillInIntent.putExtras(extras);
+                remoteViews.setOnClickFillInIntent(R.id.stackwidget_view, fillInIntent);
             }
 
             return remoteViews;

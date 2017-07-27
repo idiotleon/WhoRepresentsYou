@@ -21,7 +21,6 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.leontheprofessional.test.whorepresentsyou.MainActivity;
 import com.leontheprofessional.test.whorepresentsyou.R;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralConstant;
 import com.leontheprofessional.test.whorepresentsyou.helper.GeneralHelper;
@@ -142,10 +141,10 @@ public class MemberDetailsActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     GeneralHelper.markAsFavorite(MemberDetailsActivity.this, member);
-                    Toast.makeText(MemberDetailsActivity.this, "Marked as Favorite.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MemberDetailsActivity.this, getString(R.string.mark_as_favorite), Toast.LENGTH_SHORT).show();
                 } else {
                     GeneralHelper.cancelFavoriteStatus(MemberDetailsActivity.this, member);
-                    Toast.makeText(MemberDetailsActivity.this, "Favorite canceled", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MemberDetailsActivity.this, getString(R.string.cancel_favorite), Toast.LENGTH_SHORT).show();
                 }
             }
         });

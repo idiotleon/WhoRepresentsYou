@@ -42,6 +42,7 @@
         android:id="@+id/google_log_in_imagebutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/google_log_in" />
+        android:src="@mipmap/google_log_in"
+        android:contentDescription="@string/cd_login_icon"/>
 
 </LinearLayout>
