@@ -8,4 +8,5 @@ Users can mark any representative and senator as favorite for easier and quicker
 [Download](https://play.google.com/store/apps/details?id=com.leontheprofessional.test.whorepresentsyou&hl=en)
 
 Screenshots:
-![alt text] (https://github.com/leontheprofessional7/WhoRepresentsYou/blob/master/screenshots/01.png "main screen shot")
+![alt text](https://github.com/leontheprofessional7/WhoRepresentsYou/blob/master/screenshots/01.png "main screen shot")
+
