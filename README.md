@@ -10,3 +10,6 @@ Users can mark any representative and senator as favorite for easier and quicker
 Screenshots:
 ![alt text](https://github.com/leontheprofessional7/WhoRepresentsYou/blob/master/screenshots/01.png "main screen shot")
 
+![alt text](https://lh3.googleusercontent.com/yGhNoZwnH1NsdN5J5KjbqVt7beOr8JvcgL9JrevqwILtbLDG86y9u2zZlemOY7qrp8u2=h900-rw "more screen shots")
+
+
