@@ -109,6 +109,7 @@ public class WhoRepresentsYouApi {
     }
 
     private String getJsonDataAsStringFromUrl(URL url) {
+        Log.v(LOG_TAG, "url, getJsonDataAsStringFromUrl(): " + url);
 
         HttpURLConnection httpURLConnection = null;
         BufferedReader bufferedReader = null;
@@ -116,6 +117,14 @@ public class WhoRepresentsYouApi {
 
         try {
             httpURLConnection = (HttpURLConnection) url.openConnection();
+            // httpURLConnection.setInstanceFollowRedirects(false);
+
+            String redirect = httpURLConnection.getHeaderField("Location");
+            if (redirect != null) {
+                Log.v(LOG_TAG, "redirect is not null: " + redirect);
+                httpURLConnection = (HttpURLConnection) (new URL(redirect).openConnection());
+            }
+
             httpURLConnection.setRequestMethod("GET");
             httpURLConnection.connect();
 
